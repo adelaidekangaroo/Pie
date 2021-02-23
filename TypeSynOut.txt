@@ -1,0 +1,546 @@
+----Входные данные---- 
+
+type
+    un1 = union
+        v1: byte; # комментарий
+        v2: byte;
+        v3: extended;
+    end;
+
+    un2 = union
+        v4: byte;
+        v5: byte;
+    end;
+
+    un3 = union
+        v6: un1;
+        v7: un2;
+    end;
+var
+    a1: un1;
+    a2: byte;
+    a3: extended;
+    a4, a5: un3;
+    a6: un2;
+
+
+----Таблица лексем---- 
+
+       KEYWORD  type
+     DATA_TYPE  un1
+    ASSIGNMENT  =
+       KEYWORD  union
+            ID  v1
+          INIT  :
+   SCALAR_TYPE  byte
+ END_STATEMENT  ;
+            ID  v2
+          INIT  :
+   SCALAR_TYPE  byte
+ END_STATEMENT  ;
+            ID  v3
+          INIT  :
+   SCALAR_TYPE  extended
+ END_STATEMENT  ;
+       KEYWORD  end
+ END_STATEMENT  ;
+     DATA_TYPE  un2
+    ASSIGNMENT  =
+       KEYWORD  union
+            ID  v4
+          INIT  :
+   SCALAR_TYPE  byte
+ END_STATEMENT  ;
+            ID  v5
+          INIT  :
+   SCALAR_TYPE  byte
+ END_STATEMENT  ;
+       KEYWORD  end
+ END_STATEMENT  ;
+     DATA_TYPE  un3
+    ASSIGNMENT  =
+       KEYWORD  union
+            ID  v6
+          INIT  :
+     DATA_TYPE  un1
+ END_STATEMENT  ;
+            ID  v7
+          INIT  :
+     DATA_TYPE  un2
+ END_STATEMENT  ;
+       KEYWORD  end
+ END_STATEMENT  ;
+       KEYWORD  var
+            ID  a1
+          INIT  :
+     DATA_TYPE  un1
+ END_STATEMENT  ;
+            ID  a2
+          INIT  :
+   SCALAR_TYPE  byte
+ END_STATEMENT  ;
+            ID  a3
+          INIT  :
+   SCALAR_TYPE  extended
+ END_STATEMENT  ;
+            ID  a4
+         COMMA  ,
+            ID  a5
+          INIT  :
+     DATA_TYPE  un3
+ END_STATEMENT  ;
+            ID  a6
+          INIT  :
+     DATA_TYPE  un2
+ END_STATEMENT  ;
+
+Лента - [type t = union a : c ; a : c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - []
+Действие - Перенос
+
+Лента - [t = union a : c ; a : c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type]
+Compare... type < t
+Действие - Перенос
+
+Лента - [= union a : c ; a : c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t]
+Compare... t = =
+Действие - Перенос
+
+Лента - [union a : c ; a : c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t =]
+Compare... = < union
+Действие - Перенос
+
+Лента - [a : c ; a : c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union]
+Compare... union < a
+Действие - Перенос
+
+Лента - [: c ; a : c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union a]
+Compare... a > :
+Действие - Свёртка 9
+
+Лента - [: c ; a : c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E]
+Compare... union < :
+Действие - Перенос
+
+Лента - [c ; a : c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E :]
+Compare... : = c
+Действие - Перенос
+
+Лента - [; a : c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E : c]
+Compare... c > ;
+Действие - Свёртка 7
+
+Лента - [; a : c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E]
+Compare... union < ;
+Действие - Перенос
+
+Лента - [a : c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ;]
+Compare... ; < a
+Действие - Перенос
+
+Лента - [: c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; a]
+Compare... a > :
+Действие - Свёртка 9
+
+Лента - [: c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E]
+Compare... ; < :
+Действие - Перенос
+
+Лента - [c ; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E :]
+Compare... : = c
+Действие - Перенос
+
+Лента - [; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E : c]
+Compare... c > ;
+Действие - Свёртка 7
+
+Лента - [; a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E]
+Compare... ; < ;
+Действие - Перенос
+
+Лента - [a : c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E ;]
+Compare... ; < a
+Действие - Перенос
+
+Лента - [: c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E ; a]
+Compare... a > :
+Действие - Свёртка 9
+
+Лента - [: c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E ; E]
+Compare... ; < :
+Действие - Перенос
+
+Лента - [c ; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E ; E :]
+Compare... : = c
+Действие - Перенос
+
+Лента - [; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E ; E : c]
+Compare... c > ;
+Действие - Свёртка 7
+
+Лента - [; end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E ; E]
+Compare... ; < ;
+Действие - Перенос
+
+Лента - [end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E ; E ;]
+Compare... ; > end
+Действие - Свёртка 2
+
+Лента - [end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E ; E]
+Compare... ; > end
+Действие - Свёртка 3
+
+Лента - [end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E ; E]
+Compare... ; > end
+Действие - Свёртка 3
+
+Лента - [end ; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E]
+Compare... union = end
+Действие - Перенос
+
+Лента - [; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = union E end]
+Compare... end > ;
+Действие - Свёртка 11
+
+Лента - [; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type t = E]
+Compare... = > ;
+Действие - Свёртка 5
+
+Лента - [; t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E]
+Compare... type < ;
+Действие - Перенос
+
+Лента - [t = union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ;]
+Compare... ; < t
+Действие - Перенос
+
+Лента - [= union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t]
+Compare... t = =
+Действие - Перенос
+
+Лента - [union a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t =]
+Compare... = < union
+Действие - Перенос
+
+Лента - [a : c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union]
+Compare... union < a
+Действие - Перенос
+
+Лента - [: c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union a]
+Compare... a > :
+Действие - Свёртка 9
+
+Лента - [: c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E]
+Compare... union < :
+Действие - Перенос
+
+Лента - [c ; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E :]
+Compare... : = c
+Действие - Перенос
+
+Лента - [; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E : c]
+Compare... c > ;
+Действие - Свёртка 7
+
+Лента - [; a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E]
+Compare... union < ;
+Действие - Перенос
+
+Лента - [a : c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E ;]
+Compare... ; < a
+Действие - Перенос
+
+Лента - [: c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E ; a]
+Compare... a > :
+Действие - Свёртка 9
+
+Лента - [: c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E ; E]
+Compare... ; < :
+Действие - Перенос
+
+Лента - [c ; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E ; E :]
+Compare... : = c
+Действие - Перенос
+
+Лента - [; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E ; E : c]
+Compare... c > ;
+Действие - Свёртка 7
+
+Лента - [; end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E ; E]
+Compare... ; < ;
+Действие - Перенос
+
+Лента - [end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E ; E ;]
+Compare... ; > end
+Действие - Свёртка 2
+
+Лента - [end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E ; E]
+Compare... ; > end
+Действие - Свёртка 3
+
+Лента - [end ; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E]
+Compare... union = end
+Действие - Перенос
+
+Лента - [; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = union E end]
+Compare... end > ;
+Действие - Свёртка 11
+
+Лента - [; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; t = E]
+Compare... = > ;
+Действие - Свёртка 5
+
+Лента - [; t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E]
+Compare... ; < ;
+Действие - Перенос
+
+Лента - [t = union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ;]
+Compare... ; < t
+Действие - Перенос
+
+Лента - [= union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t]
+Compare... t = =
+Действие - Перенос
+
+Лента - [union a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t =]
+Compare... = < union
+Действие - Перенос
+
+Лента - [a : t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union]
+Compare... union < a
+Действие - Перенос
+
+Лента - [: t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union a]
+Compare... a > :
+Действие - Свёртка 9
+
+Лента - [: t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E]
+Compare... union < :
+Действие - Перенос
+
+Лента - [t ; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E :]
+Compare... : = t
+Действие - Перенос
+
+Лента - [; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E : t]
+Compare... t > ;
+Действие - Свёртка 6
+
+Лента - [; a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E]
+Compare... union < ;
+Действие - Перенос
+
+Лента - [a : t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E ;]
+Compare... ; < a
+Действие - Перенос
+
+Лента - [: t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E ; a]
+Compare... a > :
+Действие - Свёртка 9
+
+Лента - [: t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E ; E]
+Compare... ; < :
+Действие - Перенос
+
+Лента - [t ; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E ; E :]
+Compare... : = t
+Действие - Перенос
+
+Лента - [; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E ; E : t]
+Compare... t > ;
+Действие - Свёртка 6
+
+Лента - [; end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E ; E]
+Compare... ; < ;
+Действие - Перенос
+
+Лента - [end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E ; E ;]
+Compare... ; > end
+Действие - Свёртка 2
+
+Лента - [end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E ; E]
+Compare... ; > end
+Действие - Свёртка 3
+
+Лента - [end ; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E]
+Compare... union = end
+Действие - Перенос
+
+Лента - [; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = union E end]
+Compare... end > ;
+Действие - Свёртка 11
+
+Лента - [; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; t = E]
+Compare... = > ;
+Действие - Свёртка 5
+
+Лента - [; var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; E]
+Compare... ; < ;
+Действие - Перенос
+
+Лента - [var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; E ;]
+Compare... ; > var
+Действие - Свёртка 2
+
+Лента - [var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E ; E]
+Compare... ; > var
+Действие - Свёртка 3
+
+Лента - [var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E ; E]
+Compare... ; > var
+Действие - Свёртка 3
+
+Лента - [var a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E]
+Compare... type = var
+Действие - Перенос
+
+Лента - [a : t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E var]
+Compare... var < a
+Действие - Перенос
+
+Лента - [: t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E var a]
+Compare... a > :
+Действие - Свёртка 9
+
+Лента - [: t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E var E]
+Compare... var < :
+Действие - Перенос
+
+Лента - [t ; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E var E :]
+Compare... : = t
+Действие - Перенос
+
+Лента - [; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E var E : t]
+Compare... t > ;
+Действие - Свёртка 6
+
+Лента - [; a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E var E]
+Compare... var < ;
+Действие - Перенос
+
+Лента - [a : c ; a : c ; a , a : t ; a : t ;]   Память - [type E var E ;]
+Compare... ; < a
+Действие - Перенос
+
+Лента - [: c ; a : c ; a , a : t ; a : t ;]   Память - [type E var E ; a]
+Compare... a > :
+Действие - Свёртка 9
+
+Лента - [: c ; a : c ; a , a : t ; a : t ;]   Память - [type E var E ; E]
+Compare... ; < :
+Действие - Перенос
+
+Лента - [c ; a : c ; a , a : t ; a : t ;]   Память - [type E var E ; E :]
+Compare... : = c
+Действие - Перенос
+
+Лента - [; a : c ; a , a : t ; a : t ;]   Память - [type E var E ; E : c]
+Compare... c > ;
+Действие - Свёртка 7
+
+Лента - [; a : c ; a , a : t ; a : t ;]   Память - [type E var E ; E]
+Compare... ; < ;
+Действие - Перенос
+
+Лента - [a : c ; a , a : t ; a : t ;]   Память - [type E var E ; E ;]
+Compare... ; < a
+Действие - Перенос
+
+Лента - [: c ; a , a : t ; a : t ;]   Память - [type E var E ; E ; a]
+Compare... a > :
+Действие - Свёртка 9
+
+Лента - [: c ; a , a : t ; a : t ;]   Память - [type E var E ; E ; E]
+Compare... ; < :
+Действие - Перенос
+
+Лента - [c ; a , a : t ; a : t ;]   Память - [type E var E ; E ; E :]
+Compare... : = c
+Действие - Перенос
+
+Лента - [; a , a : t ; a : t ;]   Память - [type E var E ; E ; E : c]
+Compare... c > ;
+Действие - Свёртка 7
+
+Лента - [; a , a : t ; a : t ;]   Память - [type E var E ; E ; E]
+Compare... ; < ;
+Действие - Перенос
+
+Лента - [a , a : t ; a : t ;]   Память - [type E var E ; E ; E ;]
+Compare... ; < a
+Действие - Перенос
+
+Лента - [, a : t ; a : t ;]   Память - [type E var E ; E ; E ; a]
+Compare... a > ,
+Действие - Свёртка 9
+
+Лента - [, a : t ; a : t ;]   Память - [type E var E ; E ; E ; E]
+Compare... ; < ,
+Действие - Перенос
+
+Лента - [a : t ; a : t ;]   Память - [type E var E ; E ; E ; E ,]
+Compare... , = a
+Действие - Перенос
+
+Лента - [: t ; a : t ;]   Память - [type E var E ; E ; E ; E , a]
+Compare... a > :
+Действие - Свёртка 10
+
+Лента - [: t ; a : t ;]   Память - [type E var E ; E ; E ; E]
+Compare... ; < :
+Действие - Перенос
+
+Лента - [t ; a : t ;]   Память - [type E var E ; E ; E ; E :]
+Compare... : = t
+Действие - Перенос
+
+Лента - [; a : t ;]   Память - [type E var E ; E ; E ; E : t]
+Compare... t > ;
+Действие - Свёртка 6
+
+Лента - [; a : t ;]   Память - [type E var E ; E ; E ; E]
+Compare... ; < ;
+Действие - Перенос
+
+Лента - [a : t ;]   Память - [type E var E ; E ; E ; E ;]
+Compare... ; < a
+Действие - Перенос
+
+Лента - [: t ;]   Память - [type E var E ; E ; E ; E ; a]
+Compare... a > :
+Действие - Свёртка 9
+
+Лента - [: t ;]   Память - [type E var E ; E ; E ; E ; E]
+Compare... ; < :
+Действие - Перенос
+
+Лента - [t ;]   Память - [type E var E ; E ; E ; E ; E :]
+Compare... : = t
+Действие - Перенос
+
+Лента - [;]   Память - [type E var E ; E ; E ; E ; E : t]
+Compare... t > ;
+Действие - Свёртка 6
+
+Лента - [;]   Память - [type E var E ; E ; E ; E ; E]
+Compare... ; < ;
+Действие - Перенос
+
+Лента - []   Память - [type E var E ; E ; E ; E ; E ;]
+Действие - Свёртка 2
+
+Лента - []   Память - [type E var E ; E ; E ; E ; E]
+Действие - Свёртка 3
+
+Лента - []   Память - [type E var E ; E ; E ; E]
+Действие - Свёртка 3
+
+Лента - []   Память - [type E var E ; E ; E]
+Действие - Свёртка 3
+
+Лента - []   Память - [type E var E ; E]
+Действие - Свёртка 3
+
+Лента - []   Память - [type E var E]
+Действие - Свёртка 1
+
+Лента - []   Память - [E]

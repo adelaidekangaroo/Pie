@@ -1,0 +1,98 @@
+----Входные данные---- 
+
+a := not(0x00 and 0xCE);
+
+---- Отладка ---- 
+
+currentStateN a
+currentStateI  
+currentStateN :
+currentStateA =
+currentStateN  
+currentStateN n
+currentStateI o
+currentStateI t
+currentStateI (
+currentStateN 0
+currentStateZ x
+currentStateX 0
+currentStateH 0
+currentStateH  
+currentStateN a
+currentStateI n
+currentStateI d
+currentStateI  
+currentStateN 0
+currentStateZ x
+currentStateX C
+currentStateH E
+currentStateH )
+currentStateN ;
+
+----Таблица лексем---- 
+
+            ID  a
+    ASSIGNMENT  :=
+       KEYWORD  not
+         BRACE  (
+           HEX  0x00
+       KEYWORD  and
+           HEX  0xCE
+         BRACE  )
+ END_STATEMENT  ;
+
+Лента - [a := not ( a and a ) ;]   Память - []
+Действие - Перенос
+
+Лента - [:= not ( a and a ) ;]   Память - [a]
+Compare... a = :=
+Действие - Перенос
+
+Лента - [not ( a and a ) ;]   Память - [a :=]
+Compare... := < not
+Действие - Перенос
+
+Лента - [( a and a ) ;]   Память - [a := not]
+Compare... not < (
+Действие - Перенос
+
+Лента - [a and a ) ;]   Память - [a := not (]
+Compare... ( < a
+Действие - Перенос
+
+Лента - [and a ) ;]   Память - [a := not ( a]
+Compare... a > and
+Действие - Свёртка 9
+
+Лента - [and a ) ;]   Память - [a := not ( E]
+Compare... ( < and
+Действие - Перенос
+
+Лента - [a ) ;]   Память - [a := not ( E and]
+Compare... and < a
+Действие - Перенос
+
+Лента - [) ;]   Память - [a := not ( E and a]
+Compare... a > )
+Действие - Свёртка 9
+
+Лента - [) ;]   Память - [a := not ( E and E]
+Compare... and > )
+Действие - Свёртка 5
+
+Лента - [) ;]   Память - [a := not ( E]
+Compare... ( = )
+Действие - Перенос
+
+Лента - [;]   Память - [a := not ( E )]
+Compare... ) > ;
+Действие - Свёртка 8
+
+Лента - [;]   Память - [a := E]
+Compare... := = ;
+Действие - Перенос
+
+Лента - []   Память - [a := E ;]
+Действие - Свёртка 1
+
+Лента - []   Память - [E]

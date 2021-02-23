@@ -1,0 +1,22 @@
+type
+    un1 = union
+        v1: byte; # комментарий
+        v2: byte;
+        v3: extended;
+    end;
+
+    un2 = union
+        v4: byte;
+        v5: byte;
+    end;
+
+    un3 = union
+        v6: un1;
+        v7: un2;
+    end;
+var
+    a1: un1;
+    a2: byte;
+    a3: extended;
+    a4, a5: un3;
+    a6: un2;
