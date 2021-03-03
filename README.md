@@ -149,9 +149,9 @@ The language has several rules:
 <details> 
     <summary><a>Test</a></summary>
     <p>
-            <b>---- <tt>Input</tt> ----</b><br/><br/>
-            a := not(y and 0xCE);<br/><br/>
-            <b>---- <tt>Building the output tree</tt> ----</b></p>
+    <b>---- <tt>Input</tt> ----</b><br/><br/>
+    a := x and (0x09 xor z or 0xAF);<br/><br/>
+    <b>---- <tt>Building the output tree</tt> ----</b></p>
  
 ![](docs/img/output_tree.jpg) 
         
