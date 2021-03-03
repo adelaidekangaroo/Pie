@@ -28,7 +28,7 @@ The language has several rules:
       _H_ - hexadecimal input state
       _E_ - error state (entered an invalid character)
 
-![](docs/img/machine.jpg)
+![](docs/img/finite_state_machine.jpg)
 <details>
    <summary><a>Test</a></summary>
    <p>
@@ -133,11 +133,11 @@ The language has several rules:
 
 2. The set of right and left symbols:
 
-![](docs/img/set_for_synx.JPG)
+![](docs/img/set_right_and_left_symbols.jpg)
 
 3. The precedence table:
 
-![](docs/img/table_prev.JPG)
+![](docs/img/precedence_table.jpg)
 
 4. Minimizing rules:   
 
@@ -153,7 +153,7 @@ The language has several rules:
             a := not(y and 0xCE);<br/><br/>
             <b>---- <tt>Building the output tree</tt> ----</b></p>
  
-![](docs/img/tree.JPG)
+![](docs/img/output_tree.jpg)
         
  <p>
 <b>---- <tt>Debugging</tt> ----</b><br/><br/>
