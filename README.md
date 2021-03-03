@@ -153,7 +153,7 @@ The language has several rules:
             a := not(y and 0xCE);<br/><br/>
             <b>---- <tt>Building the output tree</tt> ----</b></p>
  
-![](docs/img/output_tree.jpg)
+![](docs/img/output_tree.jpg) 
         
  <p>
 <b>---- <tt>Debugging</tt> ----</b><br/><br/>
