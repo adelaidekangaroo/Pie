@@ -1,4 +1,4 @@
-`Pie` - compiler for a simple pseudo language. 
+## `Pie` - compiler for a simple pseudo language. 
 
 The language has several rules:
 1. Contains boolean expressions separated by ';' (point with
@@ -15,18 +15,18 @@ The language has several rules:
 
 ## _Lexical analyzer_
 
-The lexical analyzer is based on a finite - state machine:
+      The lexical analyzer is based on a finite - state machine:
 
-_G_ = ({N, S, C, I, A, Z, X, H, E}, {0...9, a...F,(,), ′ # ′ , ; , =, :}, 𝛿, N, {S}) <br/> 
-_N_ - start state <br/>
-_S_ - end state <br/>
-_C_ - comment input state <br/>
-_I_ - identifier input state <br/> 
-_A_ - assignment statement input state <br/>
-_Z_ - 0 input state <br/>
-_X_ - x input state <br/>
-_H_ - hexadecimal input state <br/>
-_E_ - error state (entered an invalid character) <br/>
+      _G_ = ({N, S, C, I, A, Z, X, H, E}, {0...9, a...F,(,), ′ # ′ , ; , =, :}, 𝛿, N, {S})
+      _N_ - start state
+      _S_ - end state
+      _C_ - comment input state
+      _I_ - identifier input state
+      _A_ - assignment statement input state
+      _Z_ - 0 input state
+      _X_ - x input state
+      _H_ - hexadecimal input state
+      _E_ - error state (entered an invalid character)
 
 ![](docs/img/machine.jpg)
 <details>
@@ -125,11 +125,11 @@ _E_ - error state (entered an invalid character) <br/>
 
 1. There are preset language rules:
 
-S -> a := F; (Rule 1)    
-F -> F or T | F xor T | T (Rules 2,3,4)   
-T -> T and E | E (Rules 5,6)  	
-E -> (F) | not (F) | a (Rules 7,8,9)  
-G({S,F,T,E},{a, := , ; , or, xor, and, not, (, )},P,S)  
+       S -> a := F; (Rule 1)    
+       F -> F or T | F xor T | T (Rules 2,3,4)   
+       T -> T and E | E (Rules 5,6)  	
+       E -> (F) | not (F) | a (Rules 7,8,9)  
+       G({S,F,T,E},{a, := , ; , or, xor, and, not, (, )},P,S)  
 
 2. The set of right and left symbols:
 
@@ -141,10 +141,10 @@ G({S,F,T,E},{a, := , ; , or, xor, and, not, (, )},P,S)
 
 4. Minimizing rules:   
 
-E -> a := E; (Rule 1)   
-E -> E or E | E xor E | E (Rules 2,3,4)   
-E -> E and E | E (Rules 5,6)  
-E -> (E) | not (E) | a (Rules 7,8,9)
+       E -> a := E; (Rule 1)   
+       E -> E or E | E xor E | E (Rules 2,3,4)   
+       E -> E and E | E (Rules 5,6)  
+       E -> (E) | not (E) | a (Rules 7,8,9)
 
 <details> 
     <summary><a>Test</a></summary>
@@ -156,7 +156,7 @@ E -> (E) | not (E) | a (Rules 7,8,9)
 ![](docs/img/tree.JPG)
         
  <p>
-        <b>---- <tt>Debugging</tt> ----</b><br/><br/>
+<b>---- <tt>Debugging</tt> ----</b><br/><br/>
 Line - [a := a and ( a xor a or a ) ;]<br/> 
 Memory - []<br/>
 Action - Transfer
@@ -331,4 +331,3 @@ AND AX, BX<br/>
 MOV a, AX<br/>
 </p>
 </details>
-
