@@ -1,5 +1,22 @@
 ## `Pie` - compiler for a simple pseudo language. 
 
+        pseudo code: 
+        a := x and (0x09 xor z or 0xAF); #mycode
+        
+        assembler:
+        MOV AX, 0x09
+        MOV BX, z
+        XOR AX, BX
+        
+        MOV BX, 0xAF
+        OR AX, BX
+        
+        MOVE BX, AX
+        MOV AX, x
+        AND AX, BX
+        
+        MOV a, AX
+
 The language has several rules:
 1. Contains boolean expressions separated by ';' (point with
    comma).
