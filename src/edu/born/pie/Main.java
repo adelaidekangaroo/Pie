@@ -16,7 +16,6 @@ public class Main {
     private static BufferedWriter fileWriterLS;
     private static BufferedWriter fileWriterG;
     private Node rootNode;
-    private States currentState = States.N;
     //Таблица предшествования
     private List<Precedence> precedenceTable = PrecedenceTable.PRECEDENCE_TABLE;
 
@@ -27,8 +26,6 @@ public class Main {
     public static final String HEX_NOT_ZERO = "0x01";
     public static final List<String> OPERATORS_LIST = Arrays.asList("or", "xor", "and", "not", ":=");
 
-    //Таблица лексем
-    List<Token> tokenTable = new ArrayList<>();
     //Дерево
     LinkedList<Node> nodes = new LinkedList<>();
     //Триады
@@ -45,8 +42,7 @@ public class Main {
         fileWriterG = new BufferedWriter(new FileWriter(outputFileForGenerate));
         this.data = readFileAsString(file);//Начало программы
 
-        new LexicalAnalyzer(currentState, data, tokenTable)
-                .analyze();
+        var tokenTable = new LexicalAnalyzer(data).analyze();
         new SyntacticalAnalyzer(tokenTable, precedenceTable, nodes, rootNode, this)
                 .analyze();
         new ObjectCodeGenerator(rootNode, triads)

@@ -4,6 +4,7 @@ import edu.born.pie.Main;
 import edu.born.pie.States;
 import edu.born.pie.Token;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -15,17 +16,16 @@ public class LexicalAnalyzer {
 
     private States currentState;
     private String data;
-    private List<Token> tokenTable;
+    private final List<Token> tokenTable = new ArrayList<>();
 
     private String lineSeparator = System.getProperty("line.separator");//Символ-разделитель строк
 
-    public LexicalAnalyzer(States currentState, String data, List<Token> tokenTable) {
-        this.currentState = currentState;
+    public LexicalAnalyzer(String data) {
+        this.currentState = States.N;
         this.data = data;
-        this.tokenTable = tokenTable;
     }
 
-    public void analyze() {
+    public List<Token> analyze() {
         data = data.replace(lineSeparator, "\n");//Чтобы переносы строк  занимали не 2 символа, а 1
         Main.writeForLexSyn("----Входные данные---- \n\n" + data);
 
@@ -34,6 +34,7 @@ public class LexicalAnalyzer {
 
         char[] chars = data.toCharArray();
         for (char ch : chars) {
+            Main.writeForLexSyn("currentState" + currentState + " " + ch);
             handle(ch);
             if (currentState == States.E) {
                 Main.writeForLexSyn("----ОШИБКА!!!---- символ - " + ch);
@@ -49,11 +50,12 @@ public class LexicalAnalyzer {
         for (Token token : tokenTable) {
             Main.writeForLexSyn(String.format("%14s  %s", token.getType(), token.getLabel()));
         }
+        return tokenTable;
     }
 
     String inputId = "";
 
-    void endInputId() {
+    private void endInputId() {
         if (!inputId.equals("")) {
             if (Main.KEY_WORDS_LIST.contains(inputId)) {
                 tokenTable.add(of(Type.KEYWORD, inputId));
@@ -67,10 +69,7 @@ public class LexicalAnalyzer {
         }
     }
 
-    void handle(char ch) {
-
-        Main.writeForLexSyn("currentState" + currentState + " " + ch);
-
+    private void handle(char ch) {
         switch (currentState) {
             case N -> {
                 switch (ch) {
