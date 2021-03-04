@@ -1,17 +1,17 @@
 package edu.born.pie.syn;
 
-import edu.born.pie.Node;
 import edu.born.pie.Precedence;
-import edu.born.pie.Token;
+import edu.born.pie.lex.Token;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import static edu.born.pie.PrecedenceTable.PRECEDENCE_TABLE;
-import static edu.born.pie.PrintHelper.*;
-import static edu.born.pie.Token.Type;
-import static edu.born.pie.Token.of;
+import static edu.born.pie.utils.PrintUtil.*;
+import static edu.born.pie.utils.SyntacticalUtil.listToStr;
+import static edu.born.pie.lex.Token.Type;
+import static edu.born.pie.lex.Token.of;
 
 public class SyntacticalAnalyzer {
 
@@ -35,12 +35,12 @@ public class SyntacticalAnalyzer {
 
             Token nextToken = inputQueue.peek();
 
-            // if memory is empty get first by stack
+            // if memory is empty get first
             if (memoryStack.isEmpty()) {
                 print("Action - Transfer");
                 memoryStack.add(inputQueue.poll());
             } else {
-                // if memory is not empty get last by memory
+                // if memory is not empty get last
                 Token memToken = memoryStack.getLast();
                 if (memToken.getKey().equals("E")) {
                     // if it is E and there are more elements in memory, then we take the penultimate
@@ -54,10 +54,9 @@ public class SyntacticalAnalyzer {
                 if (nextToken != null) {
                     compare = compareTokens(memToken, nextToken);
                 } else {
-                    //if stack is empty, then ">" (convolution)
+                    // if stack is empty, then ">" (convolution)
                     compare = ">";
                 }
-
                 if (compare.equals("<") || compare.equals("=")) {
                     print("Action - Transfer");
                     memoryStack.add(inputQueue.poll());
@@ -74,20 +73,6 @@ public class SyntacticalAnalyzer {
         print(String.format("Stack - %s Memory - %s", listToStr(inputQueue), listToStr(memoryStack)));
 
         return rootNode;
-    }
-
-    private String listToStr(List<Token> list) {
-        StringBuffer s = new StringBuffer("[");
-
-        list.forEach(token -> {
-            if (token != null) {
-                s.append(token.toString()).append(" ");
-            } else {
-                s.append("null");
-            }
-        });
-
-        return s.toString().trim() + "]";
     }
 
     private int convolution() {

@@ -1,12 +1,12 @@
-package edu.born.pie;
+package edu.born.pie.utils;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class PrintHelper {
+public class PrintUtil {
 
-    private static final String OUT_FILE = "Log.txt";
+    private static final String OUT_FILE = "Out.txt";
     private static BufferedWriter OUT_WRITER;
     private static final String lineSeparator = System.getProperty("line.separator"); //Символ-разделитель строк
 

@@ -1,54 +1,57 @@
 package edu.born.pie.gen;
 
-import edu.born.pie.Main;
-import edu.born.pie.Node;
-import edu.born.pie.Triad;
+import edu.born.pie.*;
+import edu.born.pie.syn.Node;
+import edu.born.pie.utils.ObjectCodeUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import static edu.born.pie.utils.ObjectCodeUtil.*;
+import static edu.born.pie.utils.PrintUtil.print;
+
 public class ObjectCodeGenerator {
 
-    private Node root;
-    private List<Triad> triads;
+    private final Node rootNode;
+    private final List<Triad> triads = new ArrayList<>();
     private int triadCounter = 0;
 
-    public ObjectCodeGenerator(Node root, List<Triad> triads) {
-        this.root = root;
-        this.triads = triads;
+    public ObjectCodeGenerator(Node rootNode) {
+        this.rootNode = rootNode;
     }
 
     public void generate() {
-        walkToTree(root);
+        walkToTree(rootNode);
 
-        Main.writeForGen("Триады:\n");
+        print("Триады:\n");
 
         triads.forEach(triad ->
-                Main.writeForGen(triad.toString()));
+                print(triad.toString()));
 
-        Main.writeForGen("\nКод:\n");
+        print("\nКод:\n");
 
         Triad lastTriad = triads.get(triads.size() - 1);
         String code = generateAsm(lastTriad);
 
-        Main.writeForGen(code);
+        print(code);
 
         wrapTriads(triads);
 
-        Main.writeForGen("Сворачиваем триады:\n");
-        Main.writeForGen("Первый этап:\n");
+        print("Сворачиваем триады:\n");
+        print("Первый этап:\n");
 
         triads.forEach(triad ->
-                Main.writeForGen(triad.toString()));
+                print(triad.toString()));
 
         skipWrappedTriad(triads);
 
-        Main.writeForGen("\nВторой этап:\n");
+        print("\nВторой этап:\n");
 
         triads.forEach(triad ->
-                Main.writeForGen(triad.toString()));
+                print(triad.toString()));
 
         lastTriad = triads.get(triads.size() - 1);
         code = generateAsm(lastTriad);
@@ -57,9 +60,9 @@ public class ObjectCodeGenerator {
         code = code.replaceAll("PUSH AX.*\n" + "---------------\n" + "POP BX", "\nMOVE BX, AX");
         code = code.replaceAll("---------------\n", "");
 
-        Main.writeForGen("\nОптимизированный код:\n");
+        print("\nОптимизированный код:\n");
 
-        Main.writeForGen(code);
+        print(code);
     }
 
     /**
@@ -74,7 +77,7 @@ public class ObjectCodeGenerator {
         if (node.getChildren().size() == 0) return node.getText();
         // если у вершины среди листьев нет оператора, то для каждого E-листа вызвать обход глубже
         children = node.getChildren();
-        if (children.stream().noneMatch(this::isOperand)) {
+        if (children.stream().noneMatch(ObjectCodeUtil::isOperand)) {
             for (Node child : children) {
                 if (!isBrace(child)) return walkToTree(child);
             }
@@ -308,11 +311,11 @@ public class ObjectCodeGenerator {
         // и изменение индексов самих триад
         for (Triad triad : optimizedTriads) {
             if (triad.getOperand1().startsWith("^")) {
-                int link = Integer.valueOf(triad.getOperand1().substring(1));
+                int link = Integer.parseInt(triad.getOperand1().substring(1));
                 link -= countWrappedTriads;
                 triad.setOperand1("^" + link);
             } else if (triad.getOperand2().startsWith("^")) {
-                int link = Integer.valueOf(triad.getOperand2().substring(1));
+                int link = Integer.parseInt(triad.getOperand2().substring(1));
                 link -= countWrappedTriads;
                 triad.setOperand2("^" + link);
 
@@ -320,25 +323,6 @@ public class ObjectCodeGenerator {
             triad.setIndex((triad.getIndex() - countWrappedTriads));
         }
 
-    }
-
-    private boolean isOperand(Node node) {
-
-        for (String keyWord : Main.OPERATORS_LIST)
-            if (node.getText().equals(keyWord))
-                return true;
-
-
-        return false;
-    }
-
-    private boolean isBrace(Node node) {
-
-        for (String brace : Main.BRACE_LIST)
-            if (node.getText().equals(brace))
-                return true;
-
-        return false;
     }
 
     private Optional<Node> findE(List<Node> nodes) {
@@ -364,9 +348,4 @@ public class ObjectCodeGenerator {
                 .findFirst()
                 .orElse(null);
     }
-
-    private int parseIndex(String index) {
-        return Integer.valueOf(index.substring(1));
-    }
-
 }
