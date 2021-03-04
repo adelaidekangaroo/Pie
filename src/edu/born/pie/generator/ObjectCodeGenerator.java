@@ -10,6 +10,7 @@ import java.util.ListIterator;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import static edu.born.pie.generator.Triad.of;
 import static edu.born.pie.utils.ObjectCodeUtil.*;
 import static edu.born.pie.utils.PrintUtil.print;
 
@@ -98,11 +99,11 @@ public class ObjectCodeGenerator {
             Triad triad;
 
             // если нет операнда слева от оператора
-            if (!firstOperand.isPresent()) {
-                triad = new Triad(operator, walkToTree(secondOperand.get()), "", Triad.COUNT_OPERANDS.ONE);
+            if (firstOperand.isEmpty()) {
+                triad = of(operator, walkToTree(secondOperand.get()), "", Triad.CountOperands.ONE);
             } else {
                 // оператор с двумя операндами
-                triad = new Triad(operator, walkToTree(firstOperand.get()), walkToTree(secondOperand.get()), Triad.COUNT_OPERANDS.TWO);
+                triad = of(operator, walkToTree(firstOperand.get()), walkToTree(secondOperand.get()), Triad.CountOperands.TWO);
 
             }
 
@@ -237,9 +238,9 @@ public class ObjectCodeGenerator {
             String operand1 = triad.getOperand1();
             String operand2 = triad.getOperand2();
             // если у триады один опренад и он шестн. число ИЛИ два операнда, и они оба шестн. числа
-            if ((Pattern.matches(Main.HEX_PATTERN, operand1) && triad.getCount_operands() == Triad.COUNT_OPERANDS.ONE) ||
+            if ((Pattern.matches(Main.HEX_PATTERN, operand1) && triad.getCountOperands() == Triad.CountOperands.ONE) ||
                     (Pattern.matches(Main.HEX_PATTERN, operand1) && Pattern.matches(Main.HEX_PATTERN, operand2)
-                            && triad.getCount_operands() == Triad.COUNT_OPERANDS.TWO)) {
+                            && triad.getCountOperands() == Triad.CountOperands.TWO)) {
                 switch (triad.getOperator()) {
                     case "not":
                         if (operand1.equals(Main.HEX_ZERO))

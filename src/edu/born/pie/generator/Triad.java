@@ -6,18 +6,19 @@ public class Triad {
     private String operator;
     private String operand1;
     private String operand2;
-    private COUNT_OPERANDS count_operands;
+    private final CountOperands countOperands;
 
-    public enum COUNT_OPERANDS {
-        ONE,
-        TWO
-    }
+    public enum CountOperands {ONE, TWO}
 
-    public Triad(String operator, String operand1, String operand2, COUNT_OPERANDS count_operands) {
+    private Triad(String operator, String operand1, String operand2, CountOperands countOperands) {
         this.operator = operator;
         this.operand1 = operand1;
         this.operand2 = operand2;
-        this.count_operands = count_operands;
+        this.countOperands = countOperands;
+    }
+
+    public static Triad of(String operator, String operand1, String operand2, CountOperands countOperands) {
+        return new Triad(operator, operand1, operand2, countOperands);
     }
 
     public void setIndex(int index) {
@@ -40,8 +41,8 @@ public class Triad {
         return operand2;
     }
 
-    public COUNT_OPERANDS getCount_operands() {
-        return count_operands;
+    public CountOperands getCountOperands() {
+        return countOperands;
     }
 
     public void setOperator(String operator) {
@@ -56,22 +57,11 @@ public class Triad {
         this.operand2 = operand2;
     }
 
-    public void setCount_operands(COUNT_OPERANDS count_operands) {
-        this.count_operands = count_operands;
-    }
-
     @Override
     public String toString() {
-        switch (count_operands) {
-            case ONE:
-                return String.format("%d: %s (%s)", index, operator, operand1);
-
-            case TWO:
-                return String.format("%d: %s (%s, %s)", index, operator, operand1, operand2);
-
-            default:
-                return "";
-        }
-
+        return switch (countOperands) {
+            case ONE -> String.format("%d: %s (%s)", index, operator, operand1);
+            case TWO -> String.format("%d: %s (%s, %s)", index, operator, operand1, operand2);
+        };
     }
 }
