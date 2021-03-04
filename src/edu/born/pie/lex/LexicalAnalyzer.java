@@ -7,9 +7,9 @@ import edu.born.pie.Token;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static edu.born.pie.LexicalUtil.isHexPart;
-import static edu.born.pie.LexicalUtil.isValidSymbol;
-import static edu.born.pie.Token.*;
+import static edu.born.pie.LexicalUtil.*;
+import static edu.born.pie.Token.Type;
+import static edu.born.pie.Token.of;
 
 public class LexicalAnalyzer {
 
@@ -72,44 +72,30 @@ public class LexicalAnalyzer {
         Main.writeForLexSyn("currentState" + currentState + " " + ch);
 
         switch (currentState) {
-            case N:
+            case N -> {
                 switch (ch) {
-                    case ':' -> {
-                        currentState = States.A;
-                        return;
-                    }
+                    case ':' -> currentState = States.A;
                     case '\n' -> {
                         endInputId();
                         currentState = States.N;
-                        return;
                     }
-                    case ' ' -> {
-                        endInputId();
-                        return;
-                    }
-                    case '#' -> {
-                        currentState = States.C;
-                        return;
-                    }
+                    case ' ' -> endInputId();
+                    case '#' -> currentState = States.C;
                     case '0' -> {
                         currentState = States.Z;
                         inputId += ch;
-                        return;
                     }
                     case '(', ')' -> {
                         currentState = States.N;
-                        tokenTable.add(of(Type.BRACE, Character.toString(ch)));
-                        return;
+                        tokenTable.add(of(Type.BRACE, ch));
                     }
                     case ';' -> {
                         endInputId();
                         currentState = States.S;
                         tokenTable.add(of(Type.END_STATEMENT, ";"));
-                        return;
                     }
                     default -> {
-                        if ((ch >= 'a') && (ch <= 'z')
-                                || (ch >= 'A') && (ch <= 'Z')) {
+                        if (isAZ(ch)) {
                             currentState = States.I;
                             inputId += ch;
                             return;
@@ -117,44 +103,35 @@ public class LexicalAnalyzer {
                         currentState = States.E;
                     }
                 }
-                break;
-
-            case A:
+            }
+            case A -> {
                 if (ch == '=') {
                     currentState = States.N;
                     tokenTable.add(of(Type.ASSIGNMENT, ":="));
                     return;
                 }
                 currentState = States.E;
-                return;
-
-            case I:
+            }
+            case I -> {
                 switch (ch) {
                     case ':' -> {
                         endInputId();
                         currentState = States.A;
-                        return;
                     }
                     case ';' -> {
                         endInputId();
                         currentState = States.S;
                         tokenTable.add(of(Type.END_STATEMENT, ";"));
-                        return;
                     }
                     case '\n', ' ' -> {
                         endInputId();
                         currentState = States.N;
-                        return;
                     }
-                    case '#' -> {
-                        currentState = States.C;
-                        return;
-                    }
+                    case '#' -> currentState = States.C;
                     case '(', ')' -> {
                         currentState = States.N;
                         endInputId();
-                        tokenTable.add(of(Type.BRACE, Character.toString(ch)));
-                        return;
+                        tokenTable.add(of(Type.BRACE, ch));
                     }
                     default -> {
                         if (isValidSymbol(ch)) {
@@ -163,36 +140,32 @@ public class LexicalAnalyzer {
                             return;
                         }
                         currentState = States.E;
-                        return;
                     }
                 }
-
-            case C:
+            }
+            case C -> {
                 if (ch == '\n') {
                     currentState = States.N;
                     return;
                 }
-                return;
-
-            case Z:
+            }
+            case Z -> {
                 if (ch == 'x') {
                     currentState = States.X;
                     inputId += ch;
                     return;
                 }
                 currentState = States.E;
-                return;
-
-            case X:
+            }
+            case X -> {
                 if (isHexPart(ch)) {
                     currentState = States.H;
                     inputId += ch;
                     return;
                 }
                 currentState = States.E;
-                return;
-
-            case H:
+            }
+            case H -> {
                 switch (ch) {
                     case ';' -> {
                         endInputId();
@@ -203,13 +176,11 @@ public class LexicalAnalyzer {
                         endInputId();
                         currentState = States.N;
                     }
-                    case '#' -> {
-                        currentState = States.C;
-                    }
+                    case '#' -> currentState = States.C;
                     case '(', ')' -> {
                         currentState = States.N;
                         endInputId();
-                        tokenTable.add(of(Type.BRACE, Character.toString(ch)));
+                        tokenTable.add(of(Type.BRACE, ch));
                     }
                     default -> {
                         if (isHexPart(ch)) {
@@ -220,8 +191,7 @@ public class LexicalAnalyzer {
                         currentState = States.E;
                     }
                 }
-
+            }
         }
     }
-
 }
