@@ -110,7 +110,7 @@ public class SyntacticalAnalyzer {
         if (last1.getKey().equals("a")) {
             memoryStack.set(memoryStack.size() - 1, new Token(Token.Type.E, ""));
 
-            Node nodeA = new Node(last1.getStr());
+            Node nodeA = new Node(last1.getLabel());
             Node nodeE = new Node("E");
             nodeE.addChildNode(nodeA);
             nodes.add(nodeE);
@@ -212,7 +212,7 @@ public class SyntacticalAnalyzer {
 
             Node nodeE = new Node("E");
 
-            nodeE.addChildNode(new Node(last4.getStr()));
+            nodeE.addChildNode(new Node(last4.getLabel()));
             nodeE.addChildNode(new Node(":="));
             nodeE.addChildNode(nodes.removeLast());
             nodeE.addChildNode(new Node(";"));

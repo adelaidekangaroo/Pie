@@ -43,7 +43,7 @@ public class LexicalAnalyzer {
 
         Main.writeForLexSyn("\n----Таблица лексем---- \n");
         for (Token token : tokenTable) {
-            Main.writeForLexSyn(String.format("%14s  %s", token.type, token.getStr()));
+            Main.writeForLexSyn(String.format("%14s  %s", token.getType(), token.getLabel()));
         }
     }
 
