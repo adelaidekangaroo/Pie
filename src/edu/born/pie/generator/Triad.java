@@ -1,4 +1,4 @@
-package edu.born.pie.gen;
+package edu.born.pie.generator;
 
 public class Triad {
 

@@ -1,7 +1,7 @@
-package edu.born.pie.syn;
+package edu.born.pie.syntactical;
 
 import edu.born.pie.Precedence;
-import edu.born.pie.lex.Token;
+import edu.born.pie.lexical.Token;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.Optional;
 import static edu.born.pie.PrecedenceTable.PRECEDENCE_TABLE;
 import static edu.born.pie.utils.PrintUtil.*;
 import static edu.born.pie.utils.SyntacticalUtil.listToStr;
-import static edu.born.pie.lex.Token.Type;
-import static edu.born.pie.lex.Token.of;
+import static edu.born.pie.lexical.Token.Type;
+import static edu.born.pie.lexical.Token.of;
 
 public class SyntacticalAnalyzer {
 

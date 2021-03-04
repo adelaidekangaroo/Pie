@@ -1,7 +1,7 @@
 package edu.born.pie.utils;
 
 import edu.born.pie.Main;
-import edu.born.pie.syn.Node;
+import edu.born.pie.syntactical.Node;
 
 public class ObjectCodeUtil {
 

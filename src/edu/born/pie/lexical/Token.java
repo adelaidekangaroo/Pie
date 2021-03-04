@@ -1,4 +1,4 @@
-package edu.born.pie.lex;
+package edu.born.pie.lexical;
 
 public class Token {
 

@@ -1,8 +1,8 @@
 package edu.born.pie;
 
-import edu.born.pie.gen.ObjectCodeGenerator;
-import edu.born.pie.lex.LexicalAnalyzer;
-import edu.born.pie.syn.SyntacticalAnalyzer;
+import edu.born.pie.generator.ObjectCodeGenerator;
+import edu.born.pie.lexical.LexicalAnalyzer;
+import edu.born.pie.syntactical.SyntacticalAnalyzer;
 
 import java.util.Arrays;
 import java.util.List;

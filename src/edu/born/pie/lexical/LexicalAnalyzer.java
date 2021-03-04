@@ -1,4 +1,4 @@
-package edu.born.pie.lex;
+package edu.born.pie.lexical;
 
 import edu.born.pie.Main;
 
@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 
 import static edu.born.pie.utils.LexicalUtil.*;
 import static edu.born.pie.utils.PrintUtil.*;
-import static edu.born.pie.lex.Token.Type;
-import static edu.born.pie.lex.Token.of;
+import static edu.born.pie.lexical.Token.Type;
+import static edu.born.pie.lexical.Token.of;
 
 public class LexicalAnalyzer {
 

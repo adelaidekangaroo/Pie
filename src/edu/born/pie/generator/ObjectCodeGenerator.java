@@ -1,7 +1,7 @@
-package edu.born.pie.gen;
+package edu.born.pie.generator;
 
 import edu.born.pie.*;
-import edu.born.pie.syn.Node;
+import edu.born.pie.syntactical.Node;
 import edu.born.pie.utils.ObjectCodeUtil;
 
 import java.util.ArrayList;

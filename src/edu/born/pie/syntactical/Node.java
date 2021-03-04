@@ -1,4 +1,4 @@
-package edu.born.pie.syn;
+package edu.born.pie.syntactical;
 
 import java.util.ArrayList;
 import java.util.List;
