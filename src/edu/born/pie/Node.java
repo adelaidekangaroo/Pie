@@ -1,4 +1,4 @@
-package root.lex_syn_gen;
+package edu.born.pie;
 
 import java.util.ArrayList;
 import java.util.List;

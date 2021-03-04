@@ -1,8 +1,8 @@
-package root.lex_syn_gen.lex;
+package edu.born.pie.lex;
 
-import root.lex_syn_gen.Main;
-import root.lex_syn_gen.States;
-import root.lex_syn_gen.Token;
+import edu.born.pie.Main;
+import edu.born.pie.States;
+import edu.born.pie.Token;
 
 import java.util.List;
 import java.util.regex.Pattern;

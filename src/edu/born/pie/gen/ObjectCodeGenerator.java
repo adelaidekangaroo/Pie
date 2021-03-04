@@ -1,8 +1,8 @@
-package root.lex_syn_gen.gen;
+package edu.born.pie.gen;
 
-import root.lex_syn_gen.Main;
-import root.lex_syn_gen.Node;
-import root.lex_syn_gen.Triad;
+import edu.born.pie.Main;
+import edu.born.pie.Node;
+import edu.born.pie.Triad;
 
 import java.util.List;
 import java.util.ListIterator;

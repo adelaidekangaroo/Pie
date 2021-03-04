@@ -1,9 +1,9 @@
-package root.lex_syn_gen.syn;
+package edu.born.pie.syn;
 
-import root.lex_syn_gen.Main;
-import root.lex_syn_gen.Node;
-import root.Predshest;
-import root.lex_syn_gen.Token;
+import edu.born.pie.Main;
+import edu.born.pie.Node;
+import edu.born.pie.Precedence;
+import edu.born.pie.Token;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Optional;
 public class SyntacticalAnalyzer {
 
     private List<Token> tokenTable;
-    private List<Predshest> predshestTable;
+    private List<Precedence> precedenceTable;
 
     private LinkedList<Token> inputQueue;
     private LinkedList<Token> memoryStack;
@@ -21,10 +21,10 @@ public class SyntacticalAnalyzer {
     private Node rootNode;
     private Main main;
 
-    public SyntacticalAnalyzer(List<Token> tokenTable, List<Predshest> predshestTable,
+    public SyntacticalAnalyzer(List<Token> tokenTable, List<Precedence> precedenceTable,
                                LinkedList<Node> nodes, Node rootNode, Main main) {
         this.tokenTable = tokenTable;
-        this.predshestTable = predshestTable;
+        this.precedenceTable = precedenceTable;
         this.nodes = nodes;
         this.rootNode = rootNode;
         this.main = main;
@@ -40,14 +40,14 @@ public class SyntacticalAnalyzer {
         do {
             Main.writeForLexSyn("");
 
-            String text = "Лента - " + listToStr(inputQueue) + "   Память - " + listToStr(memoryStack);
+            String text = "Line - " + listToStr(inputQueue) + "   Memory - " + listToStr(memoryStack);
             Main.writeForLexSyn(text);
 
             Token nextToken = inputQueue.peek();
 
             // если память пуста берём первый из ленты
             if (memoryStack.isEmpty()) {
-                Main.writeForLexSyn("Действие - Перенос");
+                Main.writeForLexSyn("Action - Transfer");
                 memoryStack.add(inputQueue.poll());
             } else {
                 // если память не пуста берём последний из памяти
@@ -69,10 +69,10 @@ public class SyntacticalAnalyzer {
                 }
 
                 if (compare.equals("<") || compare.equals("=")) {
-                    Main.writeForLexSyn("Действие - Перенос");
+                    Main.writeForLexSyn("Action - Transfer");
                     memoryStack.add(inputQueue.poll());
                 } else {
-                    Main.writeForLexSyn("Действие - Свёртка " + wrap());
+                    Main.writeForLexSyn("Action - Convolution " + wrap());
                 }
             }
 
@@ -81,7 +81,7 @@ public class SyntacticalAnalyzer {
         } while (!empty);
 
         Main.writeForLexSyn("");
-        String text = "Лента - " + listToStr(inputQueue) + "   Память - " + listToStr(memoryStack);
+        String text = "Line - " + listToStr(inputQueue) + "   Memory - " + listToStr(memoryStack);
         Main.writeForLexSyn(text);
 
     }
@@ -237,8 +237,8 @@ public class SyntacticalAnalyzer {
         token1Str = token1.getKey();
         token2Str = token2.getKey();
 
-        Optional<Predshest> predshestOptional = predshestTable.stream().filter(
-                pred -> (pred.getLeft().equals(token1Str) && (pred.getRigth().equals(token2Str)))).findFirst();
+        Optional<Precedence> predshestOptional = precedenceTable.stream().filter(
+                pred -> (pred.getLeft().equals(token1Str) && (pred.getRight().equals(token2Str)))).findFirst();
 
         if (predshestOptional.isPresent()) {
             predshestResult = predshestOptional.get().getResult();

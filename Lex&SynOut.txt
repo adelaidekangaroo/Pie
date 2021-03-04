@@ -1,6 +1,6 @@
 ----Входные данные---- 
 
-a := not(0x00 and 0xCE);
+a := x and (0x09 xor z or 0xAF);
 
 ---- Отладка ---- 
 
@@ -9,23 +9,31 @@ currentStateI
 currentStateN :
 currentStateA =
 currentStateN  
-currentStateN n
-currentStateI o
-currentStateI t
-currentStateI (
-currentStateN 0
-currentStateZ x
-currentStateX 0
-currentStateH 0
-currentStateH  
+currentStateN x
+currentStateI  
 currentStateN a
 currentStateI n
 currentStateI d
 currentStateI  
+currentStateN (
 currentStateN 0
 currentStateZ x
-currentStateX C
-currentStateH E
+currentStateX 0
+currentStateH 9
+currentStateH  
+currentStateN x
+currentStateI o
+currentStateI r
+currentStateI  
+currentStateN z
+currentStateI  
+currentStateN o
+currentStateI r
+currentStateI  
+currentStateN 0
+currentStateZ x
+currentStateX A
+currentStateH F
 currentStateH )
 currentStateN ;
 
@@ -33,66 +41,97 @@ currentStateN ;
 
             ID  a
     ASSIGNMENT  :=
-       KEYWORD  not
-         BRACE  (
-           HEX  0x00
+            ID  x
        KEYWORD  and
-           HEX  0xCE
+         BRACE  (
+           HEX  0x09
+       KEYWORD  xor
+            ID  z
+       KEYWORD  or
+           HEX  0xAF
          BRACE  )
  END_STATEMENT  ;
 
-Лента - [a := not ( a and a ) ;]   Память - []
-Действие - Перенос
+Line - [a := a and ( a xor a or a ) ;]   Memory - []
+Action - Transfer
 
-Лента - [:= not ( a and a ) ;]   Память - [a]
+Line - [:= a and ( a xor a or a ) ;]   Memory - [a]
 Compare... a = :=
-Действие - Перенос
+Action - Transfer
 
-Лента - [not ( a and a ) ;]   Память - [a :=]
-Compare... := < not
-Действие - Перенос
+Line - [a and ( a xor a or a ) ;]   Memory - [a :=]
+Compare... := < a
+Action - Transfer
 
-Лента - [( a and a ) ;]   Память - [a := not]
-Compare... not < (
-Действие - Перенос
-
-Лента - [a and a ) ;]   Память - [a := not (]
-Compare... ( < a
-Действие - Перенос
-
-Лента - [and a ) ;]   Память - [a := not ( a]
+Line - [and ( a xor a or a ) ;]   Memory - [a := a]
 Compare... a > and
-Действие - Свёртка 9
+Action - Convolution 9
 
-Лента - [and a ) ;]   Память - [a := not ( E]
-Compare... ( < and
-Действие - Перенос
+Line - [and ( a xor a or a ) ;]   Memory - [a := E]
+Compare... := < and
+Action - Transfer
 
-Лента - [a ) ;]   Память - [a := not ( E and]
-Compare... and < a
-Действие - Перенос
+Line - [( a xor a or a ) ;]   Memory - [a := E and]
+Compare... and < (
+Action - Transfer
 
-Лента - [) ;]   Память - [a := not ( E and a]
+Line - [a xor a or a ) ;]   Memory - [a := E and (]
+Compare... ( < a
+Action - Transfer
+
+Line - [xor a or a ) ;]   Memory - [a := E and ( a]
+Compare... a > xor
+Action - Convolution 9
+
+Line - [xor a or a ) ;]   Memory - [a := E and ( E]
+Compare... ( < xor
+Action - Transfer
+
+Line - [a or a ) ;]   Memory - [a := E and ( E xor]
+Compare... xor < a
+Action - Transfer
+
+Line - [or a ) ;]   Memory - [a := E and ( E xor a]
+Compare... a > or
+Action - Convolution 9
+
+Line - [or a ) ;]   Memory - [a := E and ( E xor E]
+Compare... xor > or
+Action - Convolution 3
+
+Line - [or a ) ;]   Memory - [a := E and ( E]
+Compare... ( < or
+Action - Transfer
+
+Line - [a ) ;]   Memory - [a := E and ( E or]
+Compare... or < a
+Action - Transfer
+
+Line - [) ;]   Memory - [a := E and ( E or a]
 Compare... a > )
-Действие - Свёртка 9
+Action - Convolution 9
 
-Лента - [) ;]   Память - [a := not ( E and E]
-Compare... and > )
-Действие - Свёртка 5
+Line - [) ;]   Memory - [a := E and ( E or E]
+Compare... or > )
+Action - Convolution 2
 
-Лента - [) ;]   Память - [a := not ( E]
+Line - [) ;]   Memory - [a := E and ( E]
 Compare... ( = )
-Действие - Перенос
+Action - Transfer
 
-Лента - [;]   Память - [a := not ( E )]
+Line - [;]   Memory - [a := E and ( E )]
 Compare... ) > ;
-Действие - Свёртка 8
+Action - Convolution 7
 
-Лента - [;]   Память - [a := E]
+Line - [;]   Memory - [a := E and E]
+Compare... and > ;
+Action - Convolution 5
+
+Line - [;]   Memory - [a := E]
 Compare... := = ;
-Действие - Перенос
+Action - Transfer
 
-Лента - []   Память - [a := E ;]
-Действие - Свёртка 1
+Line - []   Memory - [a := E ;]
+Action - Convolution 1
 
-Лента - []   Память - [E]
+Line - []   Memory - [E]

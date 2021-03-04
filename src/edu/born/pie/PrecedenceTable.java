@@ -1,8 +1,8 @@
-package root.lex_syn_gen;
+package edu.born.pie;
 
 import java.util.List;
 
-import static root.lex_syn_gen.Precedence.of;
+import static edu.born.pie.Precedence.of;
 
 public class PrecedenceTable {
 

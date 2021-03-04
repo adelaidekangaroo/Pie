@@ -1,18 +1,25 @@
 Триады:
 
-1: and (0x00, 0xCE)
-2: not (^1)
-3: := (a, ^2)
+1: xor (0x09, z)
+2: or (^1, 0xAF)
+3: and (x, ^2)
+4: := (a, ^3)
 
 Код:
 
-MOV AX, 0x00
-MOV BX, 0xCE
-AND AX, BX
+MOV AX, 0x09
+MOV BX, z
+XOR AX, BX
 PUSH AX
 ---------------
 POP AX
-NOT AX
+MOV BX, 0xAF
+OR AX, BX
+PUSH AX
+---------------
+POP BX
+MOV AX, x
+AND AX, BX
 PUSH AX
 ---------------
 POP AX
@@ -23,16 +30,30 @@ MOV a, AX
 
 Первый этап:
 
-1: W (0x00, 0)
-2: W (0x01)
-3: := (a, 0x01)
+1: xor (0x09, z)
+2: or (^1, 0xAF)
+3: and (x, ^2)
+4: := (a, ^3)
 
 Второй этап:
 
-1: := (a, 0x01)
+1: xor (0x09, z)
+2: or (^1, 0xAF)
+3: and (x, ^2)
+4: := (a, ^3)
 
 Оптимизированный код:
 
-MOV AX, 0x01
+MOV AX, 0x09
+MOV BX, z
+XOR AX, BX
+
+MOV BX, 0xAF
+OR AX, BX
+
+MOVE BX, AX
+MOV AX, x
+AND AX, BX
+
 MOV a, AX
 

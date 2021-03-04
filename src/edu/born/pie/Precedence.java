@@ -1,4 +1,4 @@
-package root.lex_syn_gen;
+package edu.born.pie;
 
 public class Precedence {
 

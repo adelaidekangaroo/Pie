@@ -1,9 +1,8 @@
-package root.lex_syn_gen;
+package edu.born.pie;
 
-import root.*;
-import root.lex_syn_gen.gen.ObjectCodeGenerator;
-import root.lex_syn_gen.lex.LexicalAnalyzer;
-import root.lex_syn_gen.syn.SyntacticalAnalyzer;
+import edu.born.pie.syn.SyntacticalAnalyzer;
+import edu.born.pie.gen.ObjectCodeGenerator;
+import edu.born.pie.lex.LexicalAnalyzer;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -19,7 +18,7 @@ public class Main {
     private Node rootNode;
     private States currentState = States.N;
     //Таблица предшествования
-    private List<Predshest> predshestTable = PredshestTable.predshest_table;
+    private List<Precedence> precedenceTable = PrecedenceTable.PRECEDENCE_TABLE;
 
     public static final List<String> KEY_WORDS_LIST = Arrays.asList("or", "xor", "and", "not");
     public static final List<String> BRACE_LIST = Arrays.asList("(", ")");
@@ -36,8 +35,8 @@ public class Main {
     LinkedList<Triad> triads = new LinkedList<>();
 
     public static void main(String[] args) throws IOException {
-        new Main("LexSynGenInput_1.txt");
-//        new Main("LexSynGenInput_2.txt");
+      //  new Main("LexSynGenInput_1.txt");
+        new Main("LexSynGenInput_2.txt");
 //        new Main("LexSynGenInput_3.txt");
     }
 
@@ -48,12 +47,12 @@ public class Main {
 
         new LexicalAnalyzer(currentState, data, tokenTable)
                 .analyze();
-        new SyntacticalAnalyzer(tokenTable, predshestTable, nodes, rootNode, this)
+        new SyntacticalAnalyzer(tokenTable, precedenceTable, nodes, rootNode, this)
                 .analyze();
         new ObjectCodeGenerator(rootNode, triads)
                 .generate();
 
-//        traceRootNode();
+        traceRootNode();
 
         closeStreams();
 
