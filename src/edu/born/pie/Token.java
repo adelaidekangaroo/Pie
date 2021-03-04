@@ -7,7 +7,7 @@ public class Token {
     private final Token.Type type;
     private final String label;
 
-    public Token(Token.Type type, String label) {
+    private Token(Token.Type type, String label) {
         this.type = type;
         this.label = label;
     }

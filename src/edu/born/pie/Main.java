@@ -52,7 +52,7 @@ public class Main {
         new ObjectCodeGenerator(rootNode, triads)
                 .generate();
 
-        traceRootNode();
+      //  traceRootNode();
 
         closeStreams();
 

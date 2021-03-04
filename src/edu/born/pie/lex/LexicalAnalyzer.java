@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import static edu.born.pie.LexicalUtil.isHexPart;
 import static edu.born.pie.LexicalUtil.isValidSymbol;
+import static edu.born.pie.Token.*;
 
 public class LexicalAnalyzer {
 
@@ -55,12 +56,12 @@ public class LexicalAnalyzer {
     void endInputId() {
         if (!inputId.equals("")) {
             if (Main.KEY_WORDS_LIST.contains(inputId)) {
-                tokenTable.add(new Token(Token.Type.KEYWORD, inputId));
+                tokenTable.add(of(Type.KEYWORD, inputId));
 
             } else if (Pattern.matches(Main.HEX_PATTERN, inputId)) {
-                tokenTable.add(new Token(Token.Type.HEX, inputId));
+                tokenTable.add(of(Type.HEX, inputId));
             } else {
-                tokenTable.add(new Token(Token.Type.ID, inputId));
+                tokenTable.add(of(Type.ID, inputId));
             }
             inputId = "";
         }
@@ -97,13 +98,13 @@ public class LexicalAnalyzer {
                     }
                     case '(', ')' -> {
                         currentState = States.N;
-                        tokenTable.add(new Token(Token.Type.BRACE, Character.toString(ch)));
+                        tokenTable.add(of(Type.BRACE, Character.toString(ch)));
                         return;
                     }
                     case ';' -> {
                         endInputId();
                         currentState = States.S;
-                        tokenTable.add(new Token(Token.Type.END_STATEMENT, ";"));
+                        tokenTable.add(of(Type.END_STATEMENT, ";"));
                         return;
                     }
                     default -> {
@@ -121,7 +122,7 @@ public class LexicalAnalyzer {
             case A:
                 if (ch == '=') {
                     currentState = States.N;
-                    tokenTable.add(new Token(Token.Type.ASSIGNMENT, ":="));
+                    tokenTable.add(of(Type.ASSIGNMENT, ":="));
                     return;
                 }
                 currentState = States.E;
@@ -137,7 +138,7 @@ public class LexicalAnalyzer {
                     case ';' -> {
                         endInputId();
                         currentState = States.S;
-                        tokenTable.add(new Token(Token.Type.END_STATEMENT, ";"));
+                        tokenTable.add(of(Type.END_STATEMENT, ";"));
                         return;
                     }
                     case '\n', ' ' -> {
@@ -152,7 +153,7 @@ public class LexicalAnalyzer {
                     case '(', ')' -> {
                         currentState = States.N;
                         endInputId();
-                        tokenTable.add(new Token(Token.Type.BRACE, Character.toString(ch)));
+                        tokenTable.add(of(Type.BRACE, Character.toString(ch)));
                         return;
                     }
                     default -> {
@@ -196,23 +197,19 @@ public class LexicalAnalyzer {
                     case ';' -> {
                         endInputId();
                         currentState = States.S;
-                        tokenTable.add(new Token(Token.Type.END_STATEMENT, ";"));
-                        return;
+                        tokenTable.add(of(Type.END_STATEMENT, ";"));
                     }
                     case '\n', ' ' -> {
                         endInputId();
                         currentState = States.N;
-                        return;
                     }
                     case '#' -> {
                         currentState = States.C;
-                        return;
                     }
                     case '(', ')' -> {
                         currentState = States.N;
                         endInputId();
-                        tokenTable.add(new Token(Token.Type.BRACE, Character.toString(ch)));
-                        return;
+                        tokenTable.add(of(Type.BRACE, Character.toString(ch)));
                     }
                     default -> {
                         if (isHexPart(ch)) {
@@ -221,7 +218,6 @@ public class LexicalAnalyzer {
                             return;
                         }
                         currentState = States.E;
-                        return;
                     }
                 }
 
