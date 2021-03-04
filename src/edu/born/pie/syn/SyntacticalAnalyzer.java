@@ -112,7 +112,7 @@ public class SyntacticalAnalyzer {
 
             Node nodeA = new Node(last1.getStr());
             Node nodeE = new Node("E");
-            nodeE.add(nodeA);
+            nodeE.addChildNode(nodeA);
             nodes.add(nodeE);
 
             return 9;
@@ -130,9 +130,9 @@ public class SyntacticalAnalyzer {
             Node nodeOr = new Node("or");
             Node child2 = nodes.removeLast();
             Node child1 = nodes.removeLast();
-            nodeE.add(child1);
-            nodeE.add(nodeOr);
-            nodeE.add(child2);
+            nodeE.addChildNode(child1);
+            nodeE.addChildNode(nodeOr);
+            nodeE.addChildNode(child2);
             nodes.add(nodeE);
 
             return 2;
@@ -149,10 +149,10 @@ public class SyntacticalAnalyzer {
                 memoryStack.remove(memoryStack.size() - 2);
 
                 Node nodeE = new Node("E");
-                nodeE.add(new Node("not"));
-                nodeE.add(new Node("("));
-                nodeE.add(nodes.removeLast());
-                nodeE.add(new Node(")"));
+                nodeE.addChildNode(new Node("not"));
+                nodeE.addChildNode(new Node("("));
+                nodeE.addChildNode(nodes.removeLast());
+                nodeE.addChildNode(new Node(")"));
                 nodes.add(nodeE);
 
                 return 8;
@@ -162,9 +162,9 @@ public class SyntacticalAnalyzer {
                 memoryStack.removeLast();
 
                 Node nodeE = new Node("E");
-                nodeE.add(new Node("("));
-                nodeE.add(nodes.removeLast());
-                nodeE.add(new Node(")"));
+                nodeE.addChildNode(new Node("("));
+                nodeE.addChildNode(nodes.removeLast());
+                nodeE.addChildNode(new Node(")"));
                 nodes.add(nodeE);
 
                 return 7;
@@ -180,9 +180,9 @@ public class SyntacticalAnalyzer {
             Node nodeAnd = new Node("and");
             Node child2 = nodes.removeLast();
             Node child1 = nodes.removeLast();
-            nodeE.add(child1);
-            nodeE.add(nodeAnd);
-            nodeE.add(child2);
+            nodeE.addChildNode(child1);
+            nodeE.addChildNode(nodeAnd);
+            nodeE.addChildNode(child2);
             nodes.add(nodeE);
 
             return 5;
@@ -196,9 +196,9 @@ public class SyntacticalAnalyzer {
             Node nodeXor = new Node("xor");
             Node child2 = nodes.removeLast();
             Node child1 = nodes.removeLast();
-            nodeE.add(child1);
-            nodeE.add(nodeXor);
-            nodeE.add(child2);
+            nodeE.addChildNode(child1);
+            nodeE.addChildNode(nodeXor);
+            nodeE.addChildNode(child2);
             nodes.add(nodeE);
 
             return 3;
@@ -212,10 +212,10 @@ public class SyntacticalAnalyzer {
 
             Node nodeE = new Node("E");
 
-            nodeE.add(new Node(last4.getStr()));
-            nodeE.add(new Node(":="));
-            nodeE.add(nodes.removeLast());
-            nodeE.add(new Node(";"));
+            nodeE.addChildNode(new Node(last4.getStr()));
+            nodeE.addChildNode(new Node(":="));
+            nodeE.addChildNode(nodes.removeLast());
+            nodeE.addChildNode(new Node(";"));
 
             rootNode = nodeE;
             main.setRootNode(rootNode);

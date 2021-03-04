@@ -5,17 +5,16 @@ import java.util.List;
 
 public class Node {
 
-    List<Node> children = new ArrayList<>();
+    private final List<Node> children = new ArrayList<>();
+    private final String text;
 
     public Node(String text) {
         this.text = text;
     }
 
-    public void add(Node node) {
-        children.add(node);
+    public void addChildNode(Node childNode) {
+        children.add(childNode);
     }
-
-    String text;
 
     public String getText() {
         return text;
@@ -24,5 +23,4 @@ public class Node {
     public List<Node> getChildren() {
         return children;
     }
-
 }
