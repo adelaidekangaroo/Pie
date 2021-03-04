@@ -9,6 +9,7 @@ import java.util.List;
 
 import static edu.born.pie.utils.FileUtil.readFileAsString;
 import static edu.born.pie.utils.PrintUtil.closeStream;
+import static edu.born.pie.utils.UIUtil.traceRootNode;
 
 public class Main {
 
@@ -20,18 +21,18 @@ public class Main {
     public static final List<String> OPERATORS_LIST = Arrays.asList("or", "xor", "and", "not", ":=");
 
     public static void main(String[] args) {
-        //  new Main("LexSynGenInput_1.txt");
-        new Main("LexSynGenInput_2.txt");
-//        new Main("LexSynGenInput_3.txt");
+        //new Main("Input_1.txt");
+        new Main("Input_2.txt", false);
+        //new Main("Input_3.txt");
     }
 
-    public Main(String file) {
+    public Main(String file, boolean showTree) {
         var data = readFileAsString(file);//Начало программы
         var tokenTable = new LexicalAnalyzer(data).analyze();
         var rootNode = new SyntacticalAnalyzer(tokenTable).analyze();
         new ObjectCodeGenerator(rootNode).generate();
 
-        //traceRootNode(rootNode);
+        if (showTree) traceRootNode(rootNode);
         closeStream();
     }
 }
