@@ -1,6 +1,6 @@
 package edu.born.pie.utils;
 
-import edu.born.pie.lexical.Token;
+import edu.born.pie.model.Token;
 
 import java.util.List;
 

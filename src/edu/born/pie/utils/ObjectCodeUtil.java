@@ -1,7 +1,7 @@
 package edu.born.pie.utils;
 
 import edu.born.pie.Main;
-import edu.born.pie.syntactical.Node;
+import edu.born.pie.model.Node;
 
 public class ObjectCodeUtil {
 
@@ -17,7 +17,6 @@ public class ObjectCodeUtil {
         for (String keyWord : Main.OPERATORS_LIST)
             if (node.getText().equals(keyWord))
                 return true;
-
 
         return false;
     }

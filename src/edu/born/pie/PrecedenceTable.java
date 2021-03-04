@@ -1,8 +1,10 @@
 package edu.born.pie;
 
+import edu.born.pie.model.Precedence;
+
 import java.util.List;
 
-import static edu.born.pie.Precedence.of;
+import static edu.born.pie.model.Precedence.of;
 
 public class PrecedenceTable {
 

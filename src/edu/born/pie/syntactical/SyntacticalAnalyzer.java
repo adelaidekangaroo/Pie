@@ -1,17 +1,18 @@
 package edu.born.pie.syntactical;
 
-import edu.born.pie.Precedence;
-import edu.born.pie.lexical.Token;
+import edu.born.pie.model.Node;
+import edu.born.pie.model.Precedence;
+import edu.born.pie.model.Token;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import static edu.born.pie.PrecedenceTable.PRECEDENCE_TABLE;
+import static edu.born.pie.model.Token.Type;
+import static edu.born.pie.model.Token.of;
 import static edu.born.pie.utils.PrintUtil.*;
 import static edu.born.pie.utils.SyntacticalUtil.listToStr;
-import static edu.born.pie.lexical.Token.Type;
-import static edu.born.pie.lexical.Token.of;
 
 public class SyntacticalAnalyzer {
 
@@ -82,8 +83,8 @@ public class SyntacticalAnalyzer {
         if (last1.getKey().equals("a")) {
             memoryStack.set(memoryStack.size() - 1, of(Type.E, ""));
 
-            Node nodeA = new Node(last1.getLabel());
-            Node nodeE = new Node("E");
+            Node nodeA = Node.of(last1.getLabel());
+            Node nodeE = Node.of("E");
             nodeE.addChildNode(nodeA);
             nodes.add(nodeE);
 
@@ -98,8 +99,8 @@ public class SyntacticalAnalyzer {
             memoryStack.removeLast();
             memoryStack.removeLast();
 
-            Node nodeE = new Node("E");
-            Node nodeOr = new Node("or");
+            Node nodeE = Node.of("E");
+            Node nodeOr = Node.of("or");
             Node child2 = nodes.removeLast();
             Node child1 = nodes.removeLast();
             nodeE.addChildNode(child1);
@@ -120,11 +121,11 @@ public class SyntacticalAnalyzer {
                 memoryStack.remove(memoryStack.size() - 2);
                 memoryStack.remove(memoryStack.size() - 2);
 
-                Node nodeE = new Node("E");
-                nodeE.addChildNode(new Node("not"));
-                nodeE.addChildNode(new Node("("));
+                Node nodeE = Node.of("E");
+                nodeE.addChildNode(Node.of("not"));
+                nodeE.addChildNode(Node.of("("));
                 nodeE.addChildNode(nodes.removeLast());
-                nodeE.addChildNode(new Node(")"));
+                nodeE.addChildNode(Node.of(")"));
                 nodes.add(nodeE);
 
                 return 8;
@@ -133,10 +134,10 @@ public class SyntacticalAnalyzer {
                 memoryStack.remove(memoryStack.size() - 3);
                 memoryStack.removeLast();
 
-                Node nodeE = new Node("E");
-                nodeE.addChildNode(new Node("("));
+                Node nodeE = Node.of("E");
+                nodeE.addChildNode(Node.of("("));
                 nodeE.addChildNode(nodes.removeLast());
-                nodeE.addChildNode(new Node(")"));
+                nodeE.addChildNode(Node.of(")"));
                 nodes.add(nodeE);
 
                 return 7;
@@ -148,8 +149,8 @@ public class SyntacticalAnalyzer {
             memoryStack.removeLast();
             memoryStack.removeLast();
 
-            Node nodeE = new Node("E");
-            Node nodeAnd = new Node("and");
+            Node nodeE = Node.of("E");
+            Node nodeAnd = Node.of("and");
             Node child2 = nodes.removeLast();
             Node child1 = nodes.removeLast();
             nodeE.addChildNode(child1);
@@ -164,8 +165,8 @@ public class SyntacticalAnalyzer {
             memoryStack.removeLast();
             memoryStack.removeLast();
 
-            Node nodeE = new Node("E");
-            Node nodeXor = new Node("xor");
+            Node nodeE = Node.of("E");
+            Node nodeXor = Node.of("xor");
             Node child2 = nodes.removeLast();
             Node child1 = nodes.removeLast();
             nodeE.addChildNode(child1);
@@ -182,12 +183,12 @@ public class SyntacticalAnalyzer {
             memoryStack.remove(memoryStack.size() - 3);
             memoryStack.removeLast();
 
-            Node nodeE = new Node("E");
+            Node nodeE = Node.of("E");
 
-            nodeE.addChildNode(new Node(last4.getLabel()));
-            nodeE.addChildNode(new Node(":="));
+            nodeE.addChildNode(Node.of(last4.getLabel()));
+            nodeE.addChildNode(Node.of(":="));
             nodeE.addChildNode(nodes.removeLast());
-            nodeE.addChildNode(new Node(";"));
+            nodeE.addChildNode(Node.of(";"));
 
             rootNode = nodeE;
 

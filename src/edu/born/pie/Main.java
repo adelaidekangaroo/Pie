@@ -20,7 +20,7 @@ public class Main {
     public static final List<String> OPERATORS_LIST = Arrays.asList("or", "xor", "and", "not", ":=");
 
     public static void main(String[] args) {
-      //  new Main("LexSynGenInput_1.txt");
+        //  new Main("LexSynGenInput_1.txt");
         new Main("LexSynGenInput_2.txt");
 //        new Main("LexSynGenInput_3.txt");
     }

@@ -1,4 +1,4 @@
-package edu.born.pie.generator;
+package edu.born.pie.model;
 
 public class Triad {
 
@@ -15,10 +15,6 @@ public class Triad {
         this.operand1 = operand1;
         this.operand2 = operand2;
         this.countOperands = countOperands;
-    }
-
-    public static Triad of(String operator, String operand1, String operand2, CountOperands countOperands) {
-        return new Triad(operator, operand1, operand2, countOperands);
     }
 
     public void setIndex(int index) {
@@ -63,5 +59,9 @@ public class Triad {
             case ONE -> String.format("%d: %s (%s)", index, operator, operand1);
             case TWO -> String.format("%d: %s (%s, %s)", index, operator, operand1, operand2);
         };
+    }
+
+    public static Triad of(String operator, String operand1, String operand2, CountOperands countOperands) {
+        return new Triad(operator, operand1, operand2, countOperands);
     }
 }

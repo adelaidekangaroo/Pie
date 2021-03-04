@@ -1,6 +1,6 @@
 package edu.born.pie.utils;
 
-import edu.born.pie.syntactical.Node;
+import edu.born.pie.model.Node;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

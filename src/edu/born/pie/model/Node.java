@@ -1,4 +1,4 @@
-package edu.born.pie.syntactical;
+package edu.born.pie.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ public class Node {
     private final List<Node> children = new ArrayList<>();
     private final String text;
 
-    public Node(String text) {
+    private Node(String text) {
         this.text = text;
     }
 
@@ -22,5 +22,9 @@ public class Node {
 
     public List<Node> getChildren() {
         return children;
+    }
+
+    public static Node of(String text) {
+        return new Node(text);
     }
 }

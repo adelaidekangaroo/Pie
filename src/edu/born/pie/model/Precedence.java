@@ -1,4 +1,4 @@
-package edu.born.pie;
+package edu.born.pie.model;
 
 public class Precedence {
 

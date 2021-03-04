@@ -1,15 +1,17 @@
 package edu.born.pie.lexical;
 
 import edu.born.pie.Main;
+import edu.born.pie.model.States;
+import edu.born.pie.model.Token;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static edu.born.pie.model.Token.Type;
+import static edu.born.pie.model.Token.of;
 import static edu.born.pie.utils.LexicalUtil.*;
 import static edu.born.pie.utils.PrintUtil.*;
-import static edu.born.pie.lexical.Token.Type;
-import static edu.born.pie.lexical.Token.of;
 
 public class LexicalAnalyzer {
 

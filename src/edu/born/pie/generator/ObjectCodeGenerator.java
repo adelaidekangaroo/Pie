@@ -1,7 +1,8 @@
 package edu.born.pie.generator;
 
-import edu.born.pie.*;
-import edu.born.pie.syntactical.Node;
+import edu.born.pie.Main;
+import edu.born.pie.model.Node;
+import edu.born.pie.model.Triad;
 import edu.born.pie.utils.ObjectCodeUtil;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.ListIterator;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static edu.born.pie.generator.Triad.of;
+import static edu.born.pie.model.Triad.of;
 import static edu.born.pie.utils.ObjectCodeUtil.*;
 import static edu.born.pie.utils.PrintUtil.print;
 
@@ -129,63 +130,48 @@ public class ObjectCodeGenerator {
         String operand1;
         String operand2;
 
+        // если операнд ссылка на триаду, то сначала выполнить для той триады
         switch (triad.getOperator()) {
-
-            case ":=":
+            case ":=" -> {
                 operand1 = triad.getOperand1();
                 operand2 = triad.getOperand2();
-
-                // если операнд ссылка на триаду, то сначала выполнить для той триады
                 if (operand2.startsWith("^")) {
                     builder.append(generateAsm(findTriadByIndex(parseIndex(operand2))));
                     builder.append("POP AX");
                     builder.append("\n");
                 }
-
                 if (!operand2.startsWith("^")) {
                     builder.append("MOV AX, " + operand2);
                     builder.append("\n");
                 }
-
                 builder.append("MOV " + operand1 + ", AX");
-
-                break;
-
-            case "or":
-            case "and":
-            case "xor":
+            }
+            case "or", "and", "xor" -> {
                 operand1 = triad.getOperand1();
                 operand2 = triad.getOperand2();
-
                 if (operand1.startsWith("^")) {
                     builder.append(generateAsm(findTriadByIndex(parseIndex(operand1))));
                     builder.append("POP AX");
                     builder.append("\n");
                 }
-
                 if (operand2.startsWith("^")) {
                     builder.append(generateAsm(findTriadByIndex(parseIndex(operand2))));
                     builder.append("POP BX");
                     builder.append("\n");
                 }
-
                 if (!operand1.startsWith("^")) {
                     builder.append("MOV AX, " + operand1);
                     builder.append("\n");
                 }
-
                 if (!operand2.startsWith("^")) {
                     builder.append("MOV BX, " + operand2);
                     builder.append("\n");
                 }
-
                 builder.append(triad.getOperator().toUpperCase() + " AX, BX");
                 builder.append("\n");
                 builder.append("PUSH AX");
-
-                break;
-
-            case "not": {
+            }
+            case "not" -> {
                 operand1 = triad.getOperand1();
 
                 if (operand1.startsWith("^")) {
@@ -242,14 +228,14 @@ public class ObjectCodeGenerator {
                     (Pattern.matches(Main.HEX_PATTERN, operand1) && Pattern.matches(Main.HEX_PATTERN, operand2)
                             && triad.getCountOperands() == Triad.CountOperands.TWO)) {
                 switch (triad.getOperator()) {
-                    case "not":
+                    case "not" -> {
                         if (operand1.equals(Main.HEX_ZERO))
                             triad.setOperand1(Main.HEX_NOT_ZERO);
                         else
                             triad.setOperand1(Main.HEX_ZERO);
                         triad.setOperator("W");
-                        break;
-                    case "or":
+                    }
+                    case "or" -> {
                         if (operand1.equals(Main.HEX_ZERO)) {
                             if (operand2.equals(Main.HEX_ZERO)) {
                                 triad.setOperand2("0");
@@ -265,8 +251,8 @@ public class ObjectCodeGenerator {
                             }
                         }
                         triad.setOperator("W");
-                        break;
-                    case "and":
+                    }
+                    case "and" -> {
                         if (operand1.equals(Main.HEX_ZERO) || operand2.equals(Main.HEX_ZERO)) {
                             triad.setOperand1(Main.HEX_ZERO);
                             triad.setOperand2("0");
@@ -274,8 +260,8 @@ public class ObjectCodeGenerator {
                             triad.setOperand2("0");
                         }
                         triad.setOperator("W");
-                        break;
-                    case "xor":
+                    }
+                    case "xor" -> {
                         if ((!operand1.equals(Main.HEX_ZERO) && operand2.equals(Main.HEX_ZERO))) {
                             triad.setOperand2("0");
                         } else if ((operand1.equals(Main.HEX_ZERO) && !operand2.equals(Main.HEX_ZERO))) {
@@ -286,8 +272,7 @@ public class ObjectCodeGenerator {
                             triad.setOperand2("0");
                         }
                         triad.setOperator("W");
-                        break;
-
+                    }
                 }
 
 
