@@ -12,6 +12,14 @@ public class Token {
         this.label = label;
     }
 
+    public static Token of(Token.Type type, char label) {
+        return new Token(type, Character.toString(label));
+    }
+
+    public static Token of(Token.Type type, String label) {
+        return new Token(type, label);
+    }
+
     public String getKey() {
         return switch (type) {
             case ID, HEX -> "a";

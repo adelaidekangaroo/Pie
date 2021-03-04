@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import static edu.born.pie.Token.*;
+
 public class SyntacticalAnalyzer {
 
     private List<Token> tokenTable;
@@ -108,7 +110,7 @@ public class SyntacticalAnalyzer {
 
         //Правило 9
         if (last1.getKey().equals("a")) {
-            memoryStack.set(memoryStack.size() - 1, new Token(Token.Type.E, ""));
+            memoryStack.set(memoryStack.size() - 1, of(Type.E, ""));
 
             Node nodeA = new Node(last1.getLabel());
             Node nodeE = new Node("E");
