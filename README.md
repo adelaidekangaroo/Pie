@@ -3,7 +3,7 @@
         pseudo code: 
         a := x and (0x09 xor z or 0xAF); #mycode
         
-        assembler:
+        asm code:
         MOV AX, 0x09
         MOV BX, z
         XOR AX, BX
@@ -34,16 +34,16 @@ The language has several rules:
 
       The lexical analyzer is based on a finite - state machine:
 
-      _G_ = ({N, S, C, I, A, Z, X, H, E}, {0...9, a...F,(,), ′ # ′ , ; , =, :}, 𝛿, N, {S})
-      _N_ - start state
-      _S_ - end state
-      _C_ - comment input state
-      _I_ - identifier input state
-      _A_ - assignment statement input state
-      _Z_ - 0 input state
-      _X_ - x input state
-      _H_ - hexadecimal input state
-      _E_ - error state (entered an invalid character)
+      G = ({N, S, C, I, A, Z, X, H, E}, {0...9, a...F,(,), ′ # ′ , ; , =, :}, 𝛿, N, {S})
+      N - start state
+      S - end state
+      C - comment input state
+      I - identifier input state
+      A - assignment statement input state
+      Z - 0 input state
+      X - x input state
+      H - hexadecimal input state
+      E - error state (entered an invalid character)
 
 ![](docs/img/finite_state_machine.jpg)
 <details>
