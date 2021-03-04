@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static edu.born.pie.LexicalUtil.*;
+import static edu.born.pie.PrintHelper.*;
 import static edu.born.pie.Token.Type;
 import static edu.born.pie.Token.of;
 
@@ -16,9 +17,8 @@ public class LexicalAnalyzer {
 
     private States currentState;
     private String data;
+    private String inputId = "";
     private final List<Token> tokenTable = new ArrayList<>();
-
-    private String lineSeparator = System.getProperty("line.separator");//Символ-разделитель строк
 
     public LexicalAnalyzer(String data) {
         this.currentState = States.N;
@@ -26,40 +26,39 @@ public class LexicalAnalyzer {
     }
 
     public List<Token> analyze() {
-        data = data.replace(lineSeparator, "\n");//Чтобы переносы строк  занимали не 2 символа, а 1
-        Main.writeForLexSyn("----Входные данные---- \n\n" + data);
+        data = splitLines(data);
 
-        Main.writeForLexSyn("");
-        Main.writeForLexSyn("---- Отладка ---- \n");
+        print(INPUT_TITLE);
+        print(data);
+        print(DEBUGGING_TITLE);
 
         char[] chars = data.toCharArray();
+
         for (char ch : chars) {
-            Main.writeForLexSyn("currentState" + currentState + " " + ch);
+            print(String.format("currentState%s %s", currentState, ch));
             handle(ch);
             if (currentState == States.E) {
-                Main.writeForLexSyn("----ОШИБКА!!!---- символ - " + ch);
-                Main.closeStreams();
+                print(String.format("%s symbol - %s", ERROR_TITLE, ch));
+                closeStream();
                 System.exit(0);
             }
             if (currentState == States.S) {
-                currentState = States.N; //Перезапуск автомата
+                currentState = States.N; // restart
             }
         }
 
-        Main.writeForLexSyn("\n----Таблица лексем---- \n");
+        print(TOKEN_TABLE_TITLE);
         for (Token token : tokenTable) {
-            Main.writeForLexSyn(String.format("%14s  %s", token.getType(), token.getLabel()));
+            print(String.format("%14s  %s", token.getType(), token.getLabel()));
         }
+
         return tokenTable;
     }
-
-    String inputId = "";
 
     private void endInputId() {
         if (!inputId.equals("")) {
             if (Main.KEY_WORDS_LIST.contains(inputId)) {
                 tokenTable.add(of(Type.KEYWORD, inputId));
-
             } else if (Pattern.matches(Main.HEX_PATTERN, inputId)) {
                 tokenTable.add(of(Type.HEX, inputId));
             } else {

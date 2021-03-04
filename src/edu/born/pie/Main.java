@@ -9,11 +9,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.*;
 import java.util.*;
 
+import static edu.born.pie.PrintHelper.closeStream;
+
 public class Main {
     private String data;
-    private String outputFileForLexAndSyn = String.valueOf("Lex&SynOut.txt");
     private String outputFileForGenerate = String.valueOf("GenOut.txt");
-    private static BufferedWriter fileWriterLS;
     private static BufferedWriter fileWriterG;
     private Node rootNode;
     //Таблица предшествования
@@ -38,7 +38,6 @@ public class Main {
     }
 
     public Main(String file) throws IOException {
-        fileWriterLS = new BufferedWriter(new FileWriter(outputFileForLexAndSyn));
         fileWriterG = new BufferedWriter(new FileWriter(outputFileForGenerate));
         this.data = readFileAsString(file);//Начало программы
 
@@ -51,13 +50,13 @@ public class Main {
       //  traceRootNode();
 
         closeStreams();
+        closeStream();
 
 
     }
 
     public static void closeStreams() {
         try {
-            fileWriterLS.close();
             fileWriterG.close();
         } catch (IOException e) {
 
@@ -117,13 +116,6 @@ public class Main {
         } catch (Throwable t) {
         }
         return fileData.toString();
-    }
-
-    public static void writeForLexSyn(String line) {
-        try {
-            fileWriterLS.write(line + System.getProperty("line.separator"));
-        } catch (IOException e) {
-        }
     }
 
     public static void writeForGen(String line) {

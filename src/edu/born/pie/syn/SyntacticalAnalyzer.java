@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import static edu.born.pie.PrintHelper.print;
 import static edu.born.pie.Token.*;
 
 public class SyntacticalAnalyzer {
@@ -40,16 +41,16 @@ public class SyntacticalAnalyzer {
 
         boolean empty;
         do {
-            Main.writeForLexSyn("");
+            print("");
 
             String text = "Line - " + listToStr(inputQueue) + "   Memory - " + listToStr(memoryStack);
-            Main.writeForLexSyn(text);
+            print(text);
 
             Token nextToken = inputQueue.peek();
 
             // если память пуста берём первый из ленты
             if (memoryStack.isEmpty()) {
-                Main.writeForLexSyn("Action - Transfer");
+                print("Action - Transfer");
                 memoryStack.add(inputQueue.poll());
             } else {
                 // если память не пуста берём последний из памяти
@@ -71,10 +72,10 @@ public class SyntacticalAnalyzer {
                 }
 
                 if (compare.equals("<") || compare.equals("=")) {
-                    Main.writeForLexSyn("Action - Transfer");
+                    print("Action - Transfer");
                     memoryStack.add(inputQueue.poll());
                 } else {
-                    Main.writeForLexSyn("Action - Convolution " + wrap());
+                    print("Action - Convolution " + wrap());
                 }
             }
 
@@ -82,9 +83,9 @@ public class SyntacticalAnalyzer {
             // продолжать пока в ленте не пусто, а в памяти не останется 1 элемент
         } while (!empty);
 
-        Main.writeForLexSyn("");
+        print("");
         String text = "Line - " + listToStr(inputQueue) + "   Memory - " + listToStr(memoryStack);
-        Main.writeForLexSyn(text);
+        print(text);
 
     }
 
@@ -224,7 +225,7 @@ public class SyntacticalAnalyzer {
 
             return 1;
         } else {
-            Main.writeForLexSyn("----ОШИБКА!!!---- Нет правила! - ");
+            print("----ОШИБКА!!!---- Нет правила! - ");
             Main.closeStreams();
             System.exit(0);
         }
@@ -245,10 +246,10 @@ public class SyntacticalAnalyzer {
         if (predshestOptional.isPresent()) {
             predshestResult = predshestOptional.get().getResult();
         } else {
-            Main.writeForLexSyn("ERROR! " + token1Str + " " + token2Str);
+            print("ERROR! " + token1Str + " " + token2Str);
         }
 
-        Main.writeForLexSyn("Compare... " + token1Str + " " + predshestResult + " " + token2Str);
+        print("Compare... " + token1Str + " " + predshestResult + " " + token2Str);
         return predshestResult;
     }
 

@@ -1,9 +1,6 @@
-----Входные данные---- 
-
+---- Input ---- 
 a := x and (0x09 xor z or 0xAF);
-
----- Отладка ---- 
-
+---- Debugging ---- 
 currentStateN a
 currentStateI  
 currentStateN :
@@ -36,9 +33,7 @@ currentStateX A
 currentStateH F
 currentStateH )
 currentStateN ;
-
-----Таблица лексем---- 
-
+---- Token table ---- 
             ID  a
     ASSIGNMENT  :=
             ID  x
