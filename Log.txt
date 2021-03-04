@@ -1,6 +1,6 @@
----- Input ---- 
+---- Input ----
 a := x and (0x09 xor z or 0xAF);
----- Debugging ---- 
+---- Debugging ----
 currentStateN a
 currentStateI  
 currentStateN :
@@ -33,7 +33,7 @@ currentStateX A
 currentStateH F
 currentStateH )
 currentStateN ;
----- Token table ---- 
+---- Token table ----
             ID  a
     ASSIGNMENT  :=
             ID  x
@@ -47,86 +47,86 @@ currentStateN ;
          BRACE  )
  END_STATEMENT  ;
 
-Line - [a := a and ( a xor a or a ) ;]   Memory - []
+Stack - [a := a and ( a xor a or a ) ;] Memory - []
 Action - Transfer
 
-Line - [:= a and ( a xor a or a ) ;]   Memory - [a]
+Stack - [:= a and ( a xor a or a ) ;] Memory - [a]
 Compare... a = :=
 Action - Transfer
 
-Line - [a and ( a xor a or a ) ;]   Memory - [a :=]
+Stack - [a and ( a xor a or a ) ;] Memory - [a :=]
 Compare... := < a
 Action - Transfer
 
-Line - [and ( a xor a or a ) ;]   Memory - [a := a]
+Stack - [and ( a xor a or a ) ;] Memory - [a := a]
 Compare... a > and
 Action - Convolution 9
 
-Line - [and ( a xor a or a ) ;]   Memory - [a := E]
+Stack - [and ( a xor a or a ) ;] Memory - [a := E]
 Compare... := < and
 Action - Transfer
 
-Line - [( a xor a or a ) ;]   Memory - [a := E and]
+Stack - [( a xor a or a ) ;] Memory - [a := E and]
 Compare... and < (
 Action - Transfer
 
-Line - [a xor a or a ) ;]   Memory - [a := E and (]
+Stack - [a xor a or a ) ;] Memory - [a := E and (]
 Compare... ( < a
 Action - Transfer
 
-Line - [xor a or a ) ;]   Memory - [a := E and ( a]
+Stack - [xor a or a ) ;] Memory - [a := E and ( a]
 Compare... a > xor
 Action - Convolution 9
 
-Line - [xor a or a ) ;]   Memory - [a := E and ( E]
+Stack - [xor a or a ) ;] Memory - [a := E and ( E]
 Compare... ( < xor
 Action - Transfer
 
-Line - [a or a ) ;]   Memory - [a := E and ( E xor]
+Stack - [a or a ) ;] Memory - [a := E and ( E xor]
 Compare... xor < a
 Action - Transfer
 
-Line - [or a ) ;]   Memory - [a := E and ( E xor a]
+Stack - [or a ) ;] Memory - [a := E and ( E xor a]
 Compare... a > or
 Action - Convolution 9
 
-Line - [or a ) ;]   Memory - [a := E and ( E xor E]
+Stack - [or a ) ;] Memory - [a := E and ( E xor E]
 Compare... xor > or
 Action - Convolution 3
 
-Line - [or a ) ;]   Memory - [a := E and ( E]
+Stack - [or a ) ;] Memory - [a := E and ( E]
 Compare... ( < or
 Action - Transfer
 
-Line - [a ) ;]   Memory - [a := E and ( E or]
+Stack - [a ) ;] Memory - [a := E and ( E or]
 Compare... or < a
 Action - Transfer
 
-Line - [) ;]   Memory - [a := E and ( E or a]
+Stack - [) ;] Memory - [a := E and ( E or a]
 Compare... a > )
 Action - Convolution 9
 
-Line - [) ;]   Memory - [a := E and ( E or E]
+Stack - [) ;] Memory - [a := E and ( E or E]
 Compare... or > )
 Action - Convolution 2
 
-Line - [) ;]   Memory - [a := E and ( E]
+Stack - [) ;] Memory - [a := E and ( E]
 Compare... ( = )
 Action - Transfer
 
-Line - [;]   Memory - [a := E and ( E )]
+Stack - [;] Memory - [a := E and ( E )]
 Compare... ) > ;
 Action - Convolution 7
 
-Line - [;]   Memory - [a := E and E]
+Stack - [;] Memory - [a := E and E]
 Compare... and > ;
 Action - Convolution 5
 
-Line - [;]   Memory - [a := E]
+Stack - [;] Memory - [a := E]
 Compare... := = ;
 Action - Transfer
 
-Line - []   Memory - [a := E ;]
+Stack - [] Memory - [a := E ;]
 Action - Convolution 1
 
-Line - []   Memory - [E]
+Stack - [] Memory - [E]

@@ -144,7 +144,6 @@ public class LexicalAnalyzer {
             case C -> {
                 if (ch == '\n') {
                     currentState = States.N;
-                    return;
                 }
             }
             case Z -> {

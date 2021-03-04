@@ -1,6 +1,5 @@
 package edu.born.pie.syn;
 
-import edu.born.pie.Main;
 import edu.born.pie.Node;
 import edu.born.pie.Precedence;
 import edu.born.pie.Token;
@@ -9,65 +8,53 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static edu.born.pie.PrintHelper.print;
-import static edu.born.pie.Token.*;
+import static edu.born.pie.PrecedenceTable.PRECEDENCE_TABLE;
+import static edu.born.pie.PrintHelper.*;
+import static edu.born.pie.Token.Type;
+import static edu.born.pie.Token.of;
 
 public class SyntacticalAnalyzer {
 
-    private List<Token> tokenTable;
-    private List<Precedence> precedenceTable;
-
-    private LinkedList<Token> inputQueue;
-    private LinkedList<Token> memoryStack;
-
-    private LinkedList<Node> nodes;
+    private final List<Token> tokenTable;
+    private final LinkedList<Token> inputQueue = new LinkedList<>();
+    private final LinkedList<Token> memoryStack = new LinkedList<>();
+    private final LinkedList<Node> nodes = new LinkedList<>();
     private Node rootNode;
-    private Main main;
 
-    public SyntacticalAnalyzer(List<Token> tokenTable, List<Precedence> precedenceTable,
-                               LinkedList<Node> nodes, Node rootNode, Main main) {
+    public SyntacticalAnalyzer(List<Token> tokenTable) {
         this.tokenTable = tokenTable;
-        this.precedenceTable = precedenceTable;
-        this.nodes = nodes;
-        this.rootNode = rootNode;
-        this.main = main;
     }
 
-    public void analyze() {
-        inputQueue = new LinkedList<>();
-        memoryStack = new LinkedList<>();
-
+    public Node analyze() {
         inputQueue.addAll(tokenTable);
 
-        boolean empty;
+        boolean queueIsEmpty;
         do {
             print("");
-
-            String text = "Line - " + listToStr(inputQueue) + "   Memory - " + listToStr(memoryStack);
-            print(text);
+            print(String.format("Stack - %s Memory - %s", listToStr(inputQueue), listToStr(memoryStack)));
 
             Token nextToken = inputQueue.peek();
 
-            // если память пуста берём первый из ленты
+            // if memory is empty get first by stack
             if (memoryStack.isEmpty()) {
                 print("Action - Transfer");
                 memoryStack.add(inputQueue.poll());
             } else {
-                // если память не пуста берём последний из памяти
+                // if memory is not empty get last by memory
                 Token memToken = memoryStack.getLast();
                 if (memToken.getKey().equals("E")) {
-                    // если он Е и в памяти есть ещё элементы - то берём предпоследний
+                    // if it is E and there are more elements in memory, then we take the penultimate
                     if (memoryStack.size() >= 2) {
                         memToken = memoryStack.get(memoryStack.size() - 2);
                     }
                 }
-                // сравнение
+                // compare
                 String compare;
-                // если в ленте есть элементы, то сравнить по таблице предшествования
+                // if there are elements on the stack, then compare against the precedence table
                 if (nextToken != null) {
                     compare = compareTokens(memToken, nextToken);
                 } else {
-                    //если в ленте пусто, то ">" (свёртка)
+                    //if stack is empty, then ">" (convolution)
                     compare = ">";
                 }
 
@@ -75,25 +62,26 @@ public class SyntacticalAnalyzer {
                     print("Action - Transfer");
                     memoryStack.add(inputQueue.poll());
                 } else {
-                    print("Action - Convolution " + wrap());
+                    print("Action - Convolution " + convolution());
                 }
             }
 
-            empty = inputQueue.isEmpty() && (memoryStack.size() == 1);
-            // продолжать пока в ленте не пусто, а в памяти не останется 1 элемент
-        } while (!empty);
+            queueIsEmpty = inputQueue.isEmpty() && (memoryStack.size() == 1);
+            // continue until the stack is empty and there is no 1 element left in memory
+        } while (!queueIsEmpty);
 
         print("");
-        String text = "Line - " + listToStr(inputQueue) + "   Memory - " + listToStr(memoryStack);
-        print(text);
+        print(String.format("Stack - %s Memory - %s", listToStr(inputQueue), listToStr(memoryStack)));
 
+        return rootNode;
     }
 
-    String listToStr(List<Token> list) {
+    private String listToStr(List<Token> list) {
         StringBuffer s = new StringBuffer("[");
-        list.forEach(object -> {
-            if (object != null) {
-                s.append(object.toString() + " ");
+
+        list.forEach(token -> {
+            if (token != null) {
+                s.append(token.toString()).append(" ");
             } else {
                 s.append("null");
             }
@@ -102,14 +90,10 @@ public class SyntacticalAnalyzer {
         return s.toString().trim() + "]";
     }
 
-    /**
-     * Свёртка
-     */
-
-    int wrap() {
+    private int convolution() {
         Token last1 = memoryStack.get(memoryStack.size() - 1);
 
-        //Правило 9
+        //Rule 9
         if (last1.getKey().equals("a")) {
             memoryStack.set(memoryStack.size() - 1, of(Type.E, ""));
 
@@ -124,7 +108,7 @@ public class SyntacticalAnalyzer {
         Token last2 = memoryStack.get(memoryStack.size() - 2);
         Token last3 = memoryStack.get(memoryStack.size() - 3);
 
-        //Правило 2
+        //Rule 2
         if (last1.getKey().equals("E") && last2.getKey().equals("or") && last3.getKey().equals("E")) {
             memoryStack.removeLast();
             memoryStack.removeLast();
@@ -143,9 +127,9 @@ public class SyntacticalAnalyzer {
 
         Token last4 = memoryStack.get(memoryStack.size() - 4);
 
-        // 7 и 8
+        //Rules 7 и 8
         if (last1.getKey().equals(")") && last2.getKey().equals("E") && last3.getKey().equals("(")) {
-            //Правило 8
+            //Rule 8
             if (last4.getKey().equals("not")) {
                 memoryStack.removeLast();
                 memoryStack.remove(memoryStack.size() - 2);
@@ -160,7 +144,7 @@ public class SyntacticalAnalyzer {
 
                 return 8;
 
-            } else { //Правило 7
+            } else { //Rule 7
                 memoryStack.remove(memoryStack.size() - 3);
                 memoryStack.removeLast();
 
@@ -174,7 +158,7 @@ public class SyntacticalAnalyzer {
             }
         }
 
-        //Правило 5
+        //Rule 5
         if (last1.getKey().equals("E") && last2.getKey().equals("and") && last3.getKey().equals("E")) {
             memoryStack.removeLast();
             memoryStack.removeLast();
@@ -190,7 +174,7 @@ public class SyntacticalAnalyzer {
 
             return 5;
         }
-        //Правило 3
+        //Rule 3
         if (last1.getKey().equals("E") && last2.getKey().equals("xor") && last3.getKey().equals("E")) {
             memoryStack.removeLast();
             memoryStack.removeLast();
@@ -207,7 +191,7 @@ public class SyntacticalAnalyzer {
             return 3;
         }
 
-        //Правило 1
+        //Rule 1
         if (last1.getKey().equals(";") && (last2.getKey().equals("E") && (last3.getKey().equals(":=")) && (last4.getKey().equals("a")))) {
             memoryStack.remove(memoryStack.size() - 3);
             memoryStack.remove(memoryStack.size() - 3);
@@ -221,36 +205,37 @@ public class SyntacticalAnalyzer {
             nodeE.addChildNode(new Node(";"));
 
             rootNode = nodeE;
-            main.setRootNode(rootNode);
 
             return 1;
         } else {
-            print("----ОШИБКА!!!---- Нет правила! - ");
-            Main.closeStreams();
+            print(String.format("%s No rule!", ERROR_TITLE));
+            closeStream();
             System.exit(0);
         }
 
         return 0;
     }
 
-    String compareTokens(Token token1, Token token2) {
+    private String compareTokens(Token token1, Token token2) {
         String token1Str;
         String token2Str;
-        String predshestResult = String.valueOf("");
+        String precedenceResult = "";
         token1Str = token1.getKey();
         token2Str = token2.getKey();
 
-        Optional<Precedence> predshestOptional = precedenceTable.stream().filter(
-                pred -> (pred.getLeft().equals(token1Str) && (pred.getRight().equals(token2Str)))).findFirst();
+        Optional<Precedence> precedenceOptional = PRECEDENCE_TABLE.stream()
+                .filter(precedence -> (precedence.getLeft().equals(token1Str)
+                        && (precedence.getRight().equals(token2Str))))
+                .findFirst();
 
-        if (predshestOptional.isPresent()) {
-            predshestResult = predshestOptional.get().getResult();
+        if (precedenceOptional.isPresent()) {
+            precedenceResult = precedenceOptional.get().getResult();
         } else {
-            print("ERROR! " + token1Str + " " + token2Str);
+            print(String.format("%s %s %s", ERROR_TITLE, token1Str, token2Str));
         }
 
-        print("Compare... " + token1Str + " " + predshestResult + " " + token2Str);
-        return predshestResult;
-    }
+        print(String.format("Compare... %s %s %s", token1Str, precedenceResult, token2Str));
 
+        return precedenceResult;
+    }
 }

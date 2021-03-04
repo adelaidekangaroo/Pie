@@ -16,8 +16,6 @@ public class Main {
     private String outputFileForGenerate = String.valueOf("GenOut.txt");
     private static BufferedWriter fileWriterG;
     private Node rootNode;
-    //Таблица предшествования
-    private List<Precedence> precedenceTable = PrecedenceTable.PRECEDENCE_TABLE;
 
     public static final List<String> KEY_WORDS_LIST = Arrays.asList("or", "xor", "and", "not");
     public static final List<String> BRACE_LIST = Arrays.asList("(", ")");
@@ -26,8 +24,6 @@ public class Main {
     public static final String HEX_NOT_ZERO = "0x01";
     public static final List<String> OPERATORS_LIST = Arrays.asList("or", "xor", "and", "not", ":=");
 
-    //Дерево
-    LinkedList<Node> nodes = new LinkedList<>();
     //Триады
     LinkedList<Triad> triads = new LinkedList<>();
 
@@ -42,8 +38,7 @@ public class Main {
         this.data = readFileAsString(file);//Начало программы
 
         var tokenTable = new LexicalAnalyzer(data).analyze();
-        new SyntacticalAnalyzer(tokenTable, precedenceTable, nodes, rootNode, this)
-                .analyze();
+        rootNode = new SyntacticalAnalyzer(tokenTable).analyze();
         new ObjectCodeGenerator(rootNode, triads)
                 .generate();
 

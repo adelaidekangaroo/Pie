@@ -6,14 +6,14 @@ import java.io.IOException;
 
 public class PrintHelper {
 
-    private static final String OUT_FILE = "Lex&SynOut.txt";
+    private static final String OUT_FILE = "Log.txt";
     private static BufferedWriter OUT_WRITER;
     private static final String lineSeparator = System.getProperty("line.separator"); //Символ-разделитель строк
 
-    public static final String INPUT_TITLE = "---- Input ---- ";
-    public static final String DEBUGGING_TITLE = "---- Debugging ---- ";
-    public static final String ERROR_TITLE = "---- ERROR ---- ";
-    public static final String TOKEN_TABLE_TITLE = "---- Token table ---- ";
+    public static final String INPUT_TITLE = "---- Input ----";
+    public static final String DEBUGGING_TITLE = "---- Debugging ----";
+    public static final String ERROR_TITLE = "---- ERROR ----";
+    public static final String TOKEN_TABLE_TITLE = "---- Token table ----";
 
     static {
         try {
@@ -21,10 +21,6 @@ public class PrintHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void ln() {
-        print("");
     }
 
     //Чтобы переносы строк  занимали не 2 символа, а 1
