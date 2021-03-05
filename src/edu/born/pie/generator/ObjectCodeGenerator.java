@@ -1,6 +1,5 @@
 package edu.born.pie.generator;
 
-import edu.born.pie.Main;
 import edu.born.pie.model.Node;
 import edu.born.pie.model.Triad;
 import edu.born.pie.utils.ObjectCodeUtil;
@@ -11,9 +10,12 @@ import java.util.ListIterator;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import static edu.born.pie.Main.*;
+import static edu.born.pie.model.Triad.CountOperands.ONE;
+import static edu.born.pie.model.Triad.CountOperands.TWO;
 import static edu.born.pie.model.Triad.of;
 import static edu.born.pie.utils.ObjectCodeUtil.*;
-import static edu.born.pie.utils.PrintUtil.print;
+import static edu.born.pie.utils.PrintUtil.*;
 
 public class ObjectCodeGenerator {
 
@@ -26,65 +28,60 @@ public class ObjectCodeGenerator {
     }
 
     public void generate() {
+        // Generation
+
+        ln();
+        print(TRIADS_TITLE);
+
         walkToTree(rootNode);
+        print(triads);
 
-        print("Триады:\n");
+        ln();
+        print(CODE_TITLE);
 
-        triads.forEach(triad ->
-                print(triad.toString()));
-
-        print("\nКод:\n");
-
-        Triad lastTriad = triads.get(triads.size() - 1);
-        String code = generateAsm(lastTriad);
-
+        var lastTriad = triads.get(triads.size() - 1);
+        var code = generateAsm(lastTriad);
         print(code);
 
-        wrapTriads(triads);
+        // Optimization
 
-        print("Сворачиваем триады:\n");
-        print("Первый этап:\n");
+        print(CONVOLUTION_TRIADS_TITLE);
 
-        triads.forEach(triad ->
-                print(triad.toString()));
+        print("Step 1:");
+        convolutionTriads(triads);
+        print(triads);
 
-        skipWrappedTriad(triads);
-
-        print("\nВторой этап:\n");
-
-        triads.forEach(triad ->
-                print(triad.toString()));
+        print("Step 2:");
+        removeCollapsedTriads(triads);
+        print(triads);
 
         lastTriad = triads.get(triads.size() - 1);
         code = generateAsm(lastTriad);
+        code = minimizePushPop(code);
 
-        code = code.replaceAll("PUSH AX.*\n" + "---------------\n" + "POP AX", "");
-        code = code.replaceAll("PUSH AX.*\n" + "---------------\n" + "POP BX", "\nMOVE BX, AX");
-        code = code.replaceAll("---------------\n", "");
-
-        print("\nОптимизированный код:\n");
+        ln();
+        print(OPTIMIZED_CODE_TITLE);
 
         print(code);
     }
 
-    /**
-     * Рекурсивный обход дерева и генерация триад
-     */
+    // Recursive tree traversal and triad generation
 
     private String walkToTree(Node node) {
 
-        List<Node> children = null;
+        List<Node> children;
 
-        // если у вершины нет листьев, то вернуть саму вершину
+        // if the vertex has no leaves, then return the vertex itself
         if (node.getChildren().size() == 0) return node.getText();
-        // если у вершины среди листьев нет оператора, то для каждого E-листа вызвать обход глубже
+        // if a vertex among the leaves does not have an operator,
+        // then for each E - leaf, call a deeper traversal
         children = node.getChildren();
         if (children.stream().noneMatch(ObjectCodeUtil::isOperand)) {
             for (Node child : children) {
                 if (!isBrace(child)) return walkToTree(child);
             }
         } else {
-            // если есть оператор, но вызвать обход для двух его операндов
+            // if there is an operator, then call a traversal for two of its operands
             Optional<Node> firstOperand = Optional.empty();
             Optional<Node> secondOperand = Optional.empty();
             String operator = "";
@@ -99,44 +96,39 @@ public class ObjectCodeGenerator {
 
             Triad triad;
 
-            // если нет операнда слева от оператора
+            // if there is no operand to the left of the operator
             if (firstOperand.isEmpty()) {
-                triad = of(operator, walkToTree(secondOperand.get()), "", Triad.CountOperands.ONE);
+                triad = of(operator, walkToTree(secondOperand.get()), "", ONE);
             } else {
-                // оператор с двумя операндами
-                triad = of(operator, walkToTree(firstOperand.get()), walkToTree(secondOperand.get()), Triad.CountOperands.TWO);
-
+                // operator with two operands
+                triad = of(operator, walkToTree(firstOperand.get()), walkToTree(secondOperand.get()), TWO);
             }
 
             ++triadCounter;
             triad.setIndex(triadCounter);
             triads.add(triad);
-            // вернуть индекс триады
+
+            // return triad index
             return "^" + triadCounter;
-
         }
-
         return "";
-
     }
 
-    /**
-     * Рекурсивный обход триад и генерация ассемблерного кода
-     */
+    // Recursive Triad Traversal and Assembly Code Generation
 
     private String generateAsm(Triad triad) {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
 
         String operand1;
         String operand2;
 
-        // если операнд ссылка на триаду, то сначала выполнить для той триады
+        // if the operand is a reference to a triad, then first execute for that triad
         switch (triad.getOperator()) {
             case ":=" -> {
                 operand1 = triad.getOperand1();
                 operand2 = triad.getOperand2();
                 if (operand2.startsWith("^")) {
-                    builder.append(generateAsm(findTriadByIndex(parseIndex(operand2))))
+                    builder.append(generateAsm(findTriadByIndex(triads, parseIndex(operand2))))
                             .append("POP AX")
                             .append("\n");
                 }
@@ -153,24 +145,27 @@ public class ObjectCodeGenerator {
                 operand1 = triad.getOperand1();
                 operand2 = triad.getOperand2();
                 if (operand1.startsWith("^")) {
-                    builder.append(generateAsm(findTriadByIndex(parseIndex(operand1))))
+                    builder.append(generateAsm(findTriadByIndex(triads, parseIndex(operand1))))
                             .append("POP AX")
                             .append("\n");
                 }
                 if (operand2.startsWith("^")) {
-                    builder.append(generateAsm(findTriadByIndex(parseIndex(operand2))))
+                    builder.append(generateAsm(findTriadByIndex(triads, parseIndex(operand2))))
                             .append("POP BX")
                             .append("\n");
                 }
                 if (!operand1.startsWith("^")) {
-                    builder.append("MOV AX, ").append(operand1)
+                    builder.append("MOV AX, ")
+                            .append(operand1)
                             .append("\n");
                 }
                 if (!operand2.startsWith("^")) {
-                    builder.append("MOV BX, ").append(operand2)
+                    builder.append("MOV BX, ")
+                            .append(operand2)
                             .append("\n");
                 }
-                builder.append(triad.getOperator().toUpperCase()).append(" AX, BX")
+                builder.append(triad.getOperator().toUpperCase())
+                        .append(" AX, BX")
                         .append("\n")
                         .append("PUSH AX");
             }
@@ -178,7 +173,7 @@ public class ObjectCodeGenerator {
                 operand1 = triad.getOperand1();
 
                 if (operand1.startsWith("^")) {
-                    builder.append(generateAsm(findTriadByIndex(parseIndex(operand1))))
+                    builder.append(generateAsm(findTriadByIndex(triads, parseIndex(operand1))))
                             .append("POP AX")
                             .append("\n");
                 }
@@ -189,7 +184,8 @@ public class ObjectCodeGenerator {
                             .append("\n");
                 }
 
-                builder.append(triad.getOperator().toUpperCase()).append(" AX")
+                builder.append(triad.getOperator().toUpperCase())
+                        .append(" AX")
                         .append("\n")
                         .append("PUSH AX");
             }
@@ -199,46 +195,47 @@ public class ObjectCodeGenerator {
                 .append("---------------")
                 .append("\n");
         return builder.toString();
-
     }
 
-    // свёртка триад
-    private void wrapTriads(List<Triad> noOptimizedTriads) {
+    // Convolution of triads
+
+    private void convolutionTriads(List<Triad> noOptimizedTriads) {
         for (int i = 0; i < noOptimizedTriads.size() - 1; i++) {
-            singleWrap(noOptimizedTriads);
-            Triad triad = noOptimizedTriads.get(i);
+            singleConvolution(noOptimizedTriads);
+            var triad = noOptimizedTriads.get(i);
             if (triad.getOperator().equals("W")) {
-                Triad finded = findTriadByLink("^" + triad.getIndex());
-                if (finded != null) {
-                    if (finded.getOperand1().startsWith("^")) finded.setOperand1(triad.getOperand1());
-                    else finded.setOperand2(triad.getOperand1());
+                var found = findTriadByLink(triads, "^" + triad.getIndex());
+                if (found != null) {
+                    if (found.getOperand1().startsWith("^")) found.setOperand1(triad.getOperand1());
+                    else found.setOperand2(triad.getOperand1());
                 }
             }
-
         }
     }
 
-    // один цикл обхода всех триад для свёртки
-    private void singleWrap(List<Triad> noOptimizedTriads) {
+    // One cycle of traversal of all triads for convolution
+
+    private void singleConvolution(List<Triad> noOptimizedTriads) {
         for (int j = 0; j < noOptimizedTriads.size() - 1; j++) {
-            Triad triad = noOptimizedTriads.get(j);
-            String operand1 = triad.getOperand1();
-            String operand2 = triad.getOperand2();
-            // если у триады один опренад и он шестн. число ИЛИ два операнда, и они оба шестн. числа
-            if ((Pattern.matches(Main.HEX_PATTERN, operand1) && triad.getCountOperands() == Triad.CountOperands.ONE) ||
-                    (Pattern.matches(Main.HEX_PATTERN, operand1) && Pattern.matches(Main.HEX_PATTERN, operand2)
-                            && triad.getCountOperands() == Triad.CountOperands.TWO)) {
+            var triad = noOptimizedTriads.get(j);
+            var operand1 = triad.getOperand1();
+            var operand2 = triad.getOperand2();
+            // if the triad has one operand and it is hex. number OR two operands and they are both hex. numbers
+            if ((Pattern.matches(HEX_PATTERN, operand1) && triad.getCountOperands() == ONE)
+                    || (Pattern.matches(HEX_PATTERN, operand1)
+                    && Pattern.matches(HEX_PATTERN, operand2)
+                    && triad.getCountOperands() == TWO)) {
                 switch (triad.getOperator()) {
                     case "not" -> {
-                        if (operand1.equals(Main.HEX_ZERO))
-                            triad.setOperand1(Main.HEX_NOT_ZERO);
+                        if (operand1.equals(HEX_ZERO))
+                            triad.setOperand1(HEX_NOT_ZERO);
                         else
-                            triad.setOperand1(Main.HEX_ZERO);
+                            triad.setOperand1(HEX_ZERO);
                         triad.setOperator("W");
                     }
                     case "or" -> {
-                        if (operand1.equals(Main.HEX_ZERO)) {
-                            if (!operand2.equals(Main.HEX_ZERO)) {
+                        if (operand1.equals(HEX_ZERO)) {
+                            if (!operand2.equals(HEX_ZERO)) {
                                 triad.setOperand1(operand2);
                             }
                         }
@@ -246,20 +243,20 @@ public class ObjectCodeGenerator {
                         triad.setOperator("W");
                     }
                     case "and" -> {
-                        if (operand1.equals(Main.HEX_ZERO) || operand2.equals(Main.HEX_ZERO)) {
-                            triad.setOperand1(Main.HEX_ZERO);
+                        if (operand1.equals(HEX_ZERO) || operand2.equals(HEX_ZERO)) {
+                            triad.setOperand1(HEX_ZERO);
                         }
                         triad.setOperand2("0");
                         triad.setOperator("W");
                     }
                     case "xor" -> {
-                        if ((!operand1.equals(Main.HEX_ZERO) && operand2.equals(Main.HEX_ZERO))) {
+                        if ((!operand1.equals(HEX_ZERO) && operand2.equals(HEX_ZERO))) {
                             triad.setOperand2("0");
-                        } else if ((operand1.equals(Main.HEX_ZERO) && !operand2.equals(Main.HEX_ZERO))) {
+                        } else if ((operand1.equals(HEX_ZERO) && !operand2.equals(HEX_ZERO))) {
                             triad.setOperand1(operand2);
                             triad.setOperand2("0");
                         } else {
-                            triad.setOperand1(Main.HEX_ZERO);
+                            triad.setOperand1(HEX_ZERO);
                             triad.setOperand2("0");
                         }
                         triad.setOperator("W");
@@ -269,57 +266,34 @@ public class ObjectCodeGenerator {
         }
     }
 
-    // удаление свёрнутых триад
-    private void skipWrappedTriad(List<Triad> optimizedTriads) {
-        int countWrappedTriads = 0;
+    // Removing collapsed triads
 
-        // подсчёт свёрнутых триад и их удаление
-        ListIterator<Triad> iter = optimizedTriads.listIterator();
-        while (iter.hasNext()) {
-            if (iter.next().getOperator().equals("W")) {
-                iter.remove();
-                ++countWrappedTriads;
+    private void removeCollapsedTriads(List<Triad> optimizedTriads) {
+        var countCollapsedTriads = 0;
+
+        // counting collapsed triads and removing them
+        ListIterator<Triad> iterator = optimizedTriads.listIterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getOperator().equals("W")) {
+                iterator.remove();
+                ++countCollapsedTriads;
             }
         }
 
-        // изменение ссылок на триады относительно свёрнутых
-        // и изменение индексов самих триад
+        // changing links to triads relative to collapsed
+        // and changing the indices of the triads themselves
         for (Triad triad : optimizedTriads) {
             if (triad.getOperand1().startsWith("^")) {
-                int link = Integer.parseInt(triad.getOperand1().substring(1));
-                link -= countWrappedTriads;
+                var link = Integer.parseInt(triad.getOperand1().substring(1));
+                link -= countCollapsedTriads;
                 triad.setOperand1("^" + link);
             } else if (triad.getOperand2().startsWith("^")) {
-                int link = Integer.parseInt(triad.getOperand2().substring(1));
-                link -= countWrappedTriads;
+                var link = Integer.parseInt(triad.getOperand2().substring(1));
+                link -= countCollapsedTriads;
                 triad.setOperand2("^" + link);
 
             }
-            triad.setIndex((triad.getIndex() - countWrappedTriads));
+            triad.setIndex((triad.getIndex() - countCollapsedTriads));
         }
-
-    }
-
-    private Optional<Node> findE(List<Node> nodes) {
-
-        return nodes.stream()
-                .filter(node -> !isOperand(node) && !isBrace(node))
-                .findFirst();
-    }
-
-    private Triad findTriadByIndex(int index) {
-
-        return triads.stream()
-                .filter(triad -> triad.getIndex() == index)
-                .findFirst()
-                .orElse(null);
-    }
-
-    private Triad findTriadByLink(String link) {
-
-        return triads.stream()
-                .filter(triad -> triad.getOperand1().equals(link) || triad.getOperand2().equals(link))
-                .findFirst()
-                .orElse(null);
     }
 }

@@ -130,15 +130,14 @@ Stack - [] Memory - [a := E ;]
 Action - Convolution 1
 
 Stack - [] Memory - [E]
-Триады:
 
+---- Triads ----
 1: xor (0x09, z)
 2: or (^1, 0xAF)
 3: and (x, ^2)
 4: := (a, ^3)
 
-Код:
-
+---- Code ----
 MOV AX, 0x09
 MOV BX, z
 XOR AX, BX
@@ -158,24 +157,19 @@ POP AX
 MOV a, AX
 ---------------
 
-Сворачиваем триады:
-
-Первый этап:
-
+---- Convolution triads ----
+Step 1:
+1: xor (0x09, z)
+2: or (^1, 0xAF)
+3: and (x, ^2)
+4: := (a, ^3)
+Step 2:
 1: xor (0x09, z)
 2: or (^1, 0xAF)
 3: and (x, ^2)
 4: := (a, ^3)
 
-Второй этап:
-
-1: xor (0x09, z)
-2: or (^1, 0xAF)
-3: and (x, ^2)
-4: := (a, ^3)
-
-Оптимизированный код:
-
+---- Optimized code ----
 MOV AX, 0x09
 MOV BX, z
 XOR AX, BX
