@@ -9,4 +9,3 @@ public class Main {
         //compile("Input_3.txt", false);
     }
 }
-

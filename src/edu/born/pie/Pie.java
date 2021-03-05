@@ -19,8 +19,8 @@ public class Pie {
     public static final String HEX_NOT_ZERO = "0x01";
     public static final List<String> OPERATORS_LIST = List.of("or", "xor", "and", "not", ":=");
 
-    public static void compile(String file, boolean showTree) {
-        var data = readFileAsString(file);
+    public static void compile(String filePath, boolean showTree) {
+        var data = readFileAsString(filePath);
         var tokenTable = new LexicalAnalyzer(data).analyze();
         var rootNode = new SyntacticalAnalyzer(tokenTable).analyze();
         new ObjectCodeGenerator(rootNode).generate();

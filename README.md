@@ -17,6 +17,10 @@
         
         MOV a, AX
 
+##### _How to start?_
+
+    Pie.compile(String filePath, boolean showTree)
+
 The language has several rules:
 1. Contains boolean expressions separated by ';' (point with
    comma).
