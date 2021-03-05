@@ -10,7 +10,7 @@ import java.util.ListIterator;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static edu.born.pie.Main.*;
+import static edu.born.pie.Pie.*;
 import static edu.born.pie.model.Triad.CountOperands.ONE;
 import static edu.born.pie.model.Triad.CountOperands.TWO;
 import static edu.born.pie.model.Triad.of;

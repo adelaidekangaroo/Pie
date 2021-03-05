@@ -6,8 +6,8 @@ import edu.born.pie.model.Triad;
 import java.util.List;
 import java.util.Optional;
 
-import static edu.born.pie.Main.BRACE_LIST;
-import static edu.born.pie.Main.OPERATORS_LIST;
+import static edu.born.pie.Pie.BRACE_LIST;
+import static edu.born.pie.Pie.OPERATORS_LIST;
 
 public class ObjectCodeUtil {
 

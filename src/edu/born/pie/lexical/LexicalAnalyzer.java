@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static edu.born.pie.Main.HEX_PATTERN;
-import static edu.born.pie.Main.KEY_WORDS_LIST;
+import static edu.born.pie.Pie.HEX_PATTERN;
+import static edu.born.pie.Pie.KEY_WORDS_LIST;
 import static edu.born.pie.model.Token.Type.*;
 import static edu.born.pie.model.Token.of;
 import static edu.born.pie.utils.LexicalUtil.*;
