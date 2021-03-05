@@ -21,6 +21,8 @@
 
     Pie.compile(String filePath, boolean showTree)
 
+`Needed JDK 12 or upper`
+
 The language has several rules:
 1. Contains boolean expressions separated by ';' (point with
    comma).
