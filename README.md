@@ -1,21 +1,21 @@
 ## `Pie` - compiler for a simple pseudo language. 
 
         pseudo code: 
-        a := x and (0x09 xor z or 0xAF); #mycode
+                a := x and (0x09 xor z or 0xAF); #mycode
         
         asm code:
-        MOV AX, 0x09
-        MOV BX, z
-        XOR AX, BX
+                MOV AX, 0x09
+                MOV BX, z
+                XOR AX, BX
         
-        MOV BX, 0xAF
-        OR AX, BX
+                MOV BX, 0xAF
+                OR AX, BX
         
-        MOVE BX, AX
-        MOV AX, x
-        AND AX, BX
+                MOVE BX, AX
+                MOV AX, x
+                AND AX, BX
         
-        MOV a, AX
+                MOV a, AX
 
 ##### _How to start?_
 
